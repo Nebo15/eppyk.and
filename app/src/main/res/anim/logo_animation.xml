@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+
+    android:interpolator="@android:anim/overshoot_interpolator">
+
+    <translate
+        android:duration="1200"
+        android:startOffset="1200"
+        android:fromXDelta="0"
+        android:fromYDelta="0"
+        android:toXDelta="0"
+        android:toYDelta="-400" />
+
+    <scale
+        android:duration="1200"
+        android:startOffset="1200"
+        android:fromXScale="1"
+        android:fromYScale="1"
+        android:pivotX="50%"
+        android:pivotY="50%"
+        android:toXScale="0.6"
+        android:toYScale="0.6" />
+
+    <!--<translate-->
+        <!--android:duration="200"-->
+        <!--android:startOffset="1800"-->
+        <!--android:fromXDelta="0"-->
+        <!--android:fromYDelta="0"-->
+        <!--android:toXDelta="0"-->
+        <!--android:toYDelta="25" />-->
+
+    <!--<scale-->
+        <!--android:duration="200"-->
+        <!--android:startOffset="1800"-->
+        <!--android:fromXScale="1"-->
+        <!--android:fromYScale="1"-->
+        <!--android:pivotX="50%"-->
+        <!--android:pivotY="50%"-->
+        <!--android:toXScale="1.1"-->
+        <!--android:toYScale="1.1" />-->
+
+
+
+</set>
