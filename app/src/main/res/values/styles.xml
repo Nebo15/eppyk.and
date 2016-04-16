@@ -6,8 +6,25 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="colorControlNormal">@color/colorAccent</item>
+        <item name="colorControlActivated">@color/colorAccent</item>
+        <item name="colorControlHighlight">@color/colorAccent</item>
+
     </style>
 
     <style name="Widget.GifMoviewView" parent="@android:style/Widget"></style>
+
+
+    <style name="SaveButton">
+        <item name="android:background">@color/saveButtonBackgroundColor</item>
+        <item name="android:textColor">@color/saveButtonTextColor</item>
+    </style>
+
+    <style name="TryAgainButton">
+        <item name="android:background">@color/tryAgainButtonBackgroundColot</item>
+        <item name="android:textColor">@color/tryAgainButtonTextColor</item>
+    </style>
+
 
 </resources>

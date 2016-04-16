@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimary">#CFCFCF</color>
+    <color name="colorPrimaryDark">#CFCFCF</color>
+    <color name="colorAccent">#CFCFCF</color>
+    <color name="textColor">#FFFFFF</color>
+    <color name="hintColor">#CFCFCF</color>
+
+    <color name="saveButtonBackgroundColor">#ABFE5E</color>
+    <color name="saveButtonTextColor">#224479</color>
+
+    <color name="tryAgainButtonBackgroundColot">#F62556</color>
+    <color name="tryAgainButtonTextColor">#FFFFFF</color>
 </resources>

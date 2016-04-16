@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">EPPYK</string>
+    <string name="what_is_your_question">WHAT\'S YOUR QUESTION?</string>
+    <string name="ask_it_here">ask it here</string>
+    <string name="and_shake">AND SHAKE YOUR PHONE TO GET THE ANSWER</string>
+
+    <string name="button_save_answer">Save the answer</string>
+    <string name="button_try_again">Try again</string>
+
 </resources>

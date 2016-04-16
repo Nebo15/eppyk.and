@@ -2,6 +2,7 @@
 <resources>
     <declare-styleable name="GifMoviewView">
         <attr name="gif" format="reference" />
+        <attr name="framesCount" format="integer" />
         <attr name="paused" format="boolean" />
     </declare-styleable>
     <declare-styleable name="CustomTheme">

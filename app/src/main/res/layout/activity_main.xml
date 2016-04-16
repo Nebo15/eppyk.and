@@ -10,7 +10,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".MainActivity">
 
-    <pl.droidsonroids.gif.GifImageView
+    <nebo15.eppyk.gif.GIFView
         android:id="@+id/StarsGifView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -18,30 +18,94 @@
         android:scaleType="fitCenter"
         android:src="@drawable/star_begin" />
 
-    <pl.droidsonroids.gif.GifImageView
-        android:id="@+id/StarsGifViewBuffer"
-        android:visibility="gone"
+
+    <!-- Control UI -->
+    <TextView
+        android:id="@+id/CtrlWhatIsYourQuestion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerInParent="true"
+        android:layout_centerVertical="true"
+        android:paddingBottom="140dip"
+        android:text="@string/what_is_your_question"
+        android:textColor="@color/textColor"
+        android:textSize="22dp"
+        android:visibility="gone" />
+
+    <EditText
+        android:id="@+id/CtrlQuestionEdit"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
-        android:scaleType="fitCenter"/>
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/CtrlWhatIsYourQuestion"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="45dip"
+        android:layout_marginRight="45dip"
+        android:layout_marginTop="-135dip"
+        android:hint="@string/ask_it_here"
+        android:lines="1"
+        android:text="Some user question"
+        android:textAlignment="center"
+        android:textColor="@color/textColor"
+        android:textColorHint="@color/hintColor"
+        android:textSize="16dp"
+        android:visibility="gone" />
 
 
-    <Button
-        android:id="@+id/animTestButton"
+    <nebo15.eppyk.gif.GIFView
+        android:id="@+id/handImageView"
+        android:layout_width="30dip"
+        android:layout_height="30dip"
+        android:layout_below="@+id/CtrlQuestionEdit"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dip"
+        android:src="@drawable/hand"
+        android:visibility="gone" />
+
+
+    <TextView
+        android:id="@+id/CtrlShakeText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/handImageView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dip"
+        android:text="@string/and_shake"
+        android:textColor="@color/textColor"
+        android:textSize="12dp"
+        android:visibility="gone" />
+
+
+    <!-- Answer -->
+    <EditText
+        android:id="@+id/QuestionText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="15dip"
+        android:layout_marginTop="100dip"
+        android:enabled="false"
+        android:focusable="false"
+        android:maxHeight="70dip"
+        android:maxWidth="200dip"
+        android:textColor="@color/textColor"
+        android:textSize="14dp"
+        android:visibility="gone" />
+
+
+    <TextView
+        android:id="@+id/AnswerText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:onClick="testAnimation"
-        android:text="Animation" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/animTestButton"
-        android:layout_centerHorizontal="true"
-        android:onClick="gifTest"
-        android:text="Gif test" />
+        android:layout_marginLeft="20dip"
+        android:layout_marginRight="20dip"
+        android:maxLines="6"
+        android:paddingBottom="40dip"
+        android:textAlignment="center"
+        android:textColor="@color/textColor"
+        android:textSize="30dp"
+        android:visibility="gone" />
 
 
     <!-- LOGO -->
@@ -68,28 +132,55 @@
         android:scaleType="fitStart"
         android:src="@mipmap/planet" />
 
-
     <!-- MAN -->
-    <nebo15.eppyk.GIFView
+    <nebo15.eppyk.gif.GIFView
         android:id="@+id/ManImageView"
         android:layout_width="180dip"
         android:layout_height="180dip"
         android:layout_above="@+id/PlanetImageView"
         android:layout_marginBottom="-16dip"
         android:layout_marginLeft="-10dip"
-        android:src="@drawable/test_man"/>
+        android:src="@drawable/man_static" />
 
 
     <!-- DOG -->
-    <nebo15.eppyk.GIFView
+    <nebo15.eppyk.gif.GIFView
         android:id="@+id/DogImageView"
         android:layout_width="60dip"
         android:layout_height="60dip"
         android:layout_above="@+id/PlanetImageView"
         android:layout_marginBottom="-12dip"
         android:layout_marginLeft="30dip"
-        android:src="@mipmap/dog"/>
+        android:src="@drawable/dog_move_1" />
 
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="25dip">
+
+        <Button
+            android:id="@+id/SaveButton"
+            style="@style/SaveButton"
+            android:layout_width="100dip"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dip"
+            android:layout_weight="1"
+            android:text="@string/button_save_answer"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/TryAgainButton"
+            style="@style/TryAgainButton"
+            android:layout_width="100dip"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dip"
+            android:layout_weight="1"
+            android:text="@string/button_try_again"
+            android:textAllCaps="false" />
+
+    </LinearLayout>
 
 
 </RelativeLayout>
