@@ -7,7 +7,6 @@ import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
@@ -18,7 +17,6 @@ import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -29,7 +27,7 @@ import nebo15.eppyk.gif.GIFView;
 import nebo15.eppyk.gif.IGIFEvent;
 import nebo15.eppyk.listeners.EventManager;
 import nebo15.eppyk.listeners.ShakeEventListener;
-import nebo15.eppyk.managers.CapturePhotoUtils;
+import nebo15.eppyk.managers.AnswerManager;
 import nebo15.eppyk.managers.ImageManager;
 
 
@@ -57,7 +55,6 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
 
     Button saveButton;
     Button tryAgainButton;
-
 
 
     // UI Ainmations
@@ -110,8 +107,7 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
                     HashMap<String, String> params = new HashMap<String, String>();
                     params.put("Question", ctrlQuestionEdit.getText().toString());
                     EventManager.trackEvent("Shake for answer", params);
-                }
-                else if (shakeAction == ShakeAction.TRYAGAIN) {
+                } else if (shakeAction == ShakeAction.TRYAGAIN) {
                     HashMap<String, String> params = new HashMap<String, String>();
                     params.put("Question", ctrlQuestionEdit.getText().toString());
                     EventManager.trackEvent("Shake for another answer", params);
@@ -138,11 +134,12 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
         this.dogImageView = (GIFView) findViewById(R.id.DogImageView);
 
         // Control UI
-        this.ctrlWhatIsYourQuestion = (TextView)findViewById(R.id.CtrlWhatIsYourQuestion);
+        this.ctrlWhatIsYourQuestion = (TextView) findViewById(R.id.CtrlWhatIsYourQuestion);
         this.ctrlWhatIsYourQuestion.setTypeface(fontGeneralBold);
 
-        this.ctrlQuestionEdit = (EditText)findViewById(R.id.CtrlQuestionEdit);
+        this.ctrlQuestionEdit = (EditText) findViewById(R.id.CtrlQuestionEdit);
         this.ctrlQuestionEdit.setTypeface(fontGeneralBold);
+
         this.ctrlQuestionEdit.setOnKeyListener(new View.OnKeyListener() {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
@@ -159,29 +156,30 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
             }
         });
 
-        this.handImageView = (GIFView)findViewById(R.id.handImageView);
+
+        this.handImageView = (GIFView) findViewById(R.id.handImageView);
         this.handImageView.setHandler(this);
         this.handImageView.setGif(handGif);
 
-        this.ctrlShakeText = (TextView)findViewById(R.id.CtrlShakeText);
+        this.ctrlShakeText = (TextView) findViewById(R.id.CtrlShakeText);
         this.ctrlShakeText.setTypeface(fontGeneralBold);
 
         // Q&A
-        this.questionText = (EditText)findViewById(R.id.QuestionText);
+        this.questionText = (EditText) findViewById(R.id.QuestionText);
         this.questionText.setTypeface(fontGeneral);
 
-        this.answerText = (TextView)findViewById(R.id.AnswerText);
+        this.answerText = (TextView) findViewById(R.id.AnswerText);
         this.answerText.setTypeface(fontGeneralBold);
 
-        this.saveButton = (Button)findViewById(R.id.SaveButton);
+        this.saveButton = (Button) findViewById(R.id.SaveButton);
         this.saveButton.setTypeface(fontGeneralBold);
         this.saveButton.setOnClickListener(this);
 
-        this.tryAgainButton = (Button)findViewById(R.id.TryAgainButton);
+        this.tryAgainButton = (Button) findViewById(R.id.TryAgainButton);
         this.tryAgainButton.setTypeface(fontGeneralBold);
         this.tryAgainButton.setOnClickListener(this);
 
-        this.whiteView = (View)findViewById(R.id.WhiteView);
+        this.whiteView = (View) findViewById(R.id.WhiteView);
 
         prepareAnimation();
         startAnimation();
@@ -271,6 +269,7 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
     }
 
     Animation whatAnimationShow, editAnimationShow, handAnimationShow, shakeAnimationShow;
+
     public void controlsUIAnimationShow() {
         // Controls animation
         whatAnimationShow = AnimationUtils.loadAnimation(this, R.anim.control_show_animation);
@@ -299,6 +298,7 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
     }
 
     Animation whatAnimationHide, editAnimationHide, handAnimationHide, shakeAnimationHide;
+
     private void controlsUIAnimationHide() {
         whatAnimationHide = AnimationUtils.loadAnimation(this, R.anim.control_hide_animation);
         whatAnimationHide.setAnimationListener(this);
@@ -326,9 +326,10 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
     }
 
     Animation showLeftButtonAnimation, showRightButtonAnimation;
+
     private void showButtons() {
 
-        showLeftButtonAnimation = new TranslateAnimation((saveButton.getWidth() + 50) * -1, 0,0, 0);
+        showLeftButtonAnimation = new TranslateAnimation((saveButton.getWidth() + 50) * -1, 0, 0, 0);
         showLeftButtonAnimation.setDuration(1000);
         showLeftButtonAnimation.setStartOffset(1000);
         showLeftButtonAnimation.setFillAfter(true);
@@ -336,7 +337,7 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
         showLeftButtonAnimation.setInterpolator(new OvershootInterpolator());
         this.saveButton.startAnimation(showLeftButtonAnimation);
 
-        showRightButtonAnimation = new TranslateAnimation((tryAgainButton.getWidth() + 50), 0,0, 0);
+        showRightButtonAnimation = new TranslateAnimation((tryAgainButton.getWidth() + 50), 0, 0, 0);
         showRightButtonAnimation.setDuration(1000);
         showRightButtonAnimation.setStartOffset(1000);
         showRightButtonAnimation.setFillAfter(true);
@@ -347,9 +348,10 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
     }
 
     Animation hideLeftButtonAnimation, hideRightButtonAnimation;
+
     private void hideButtons() {
 
-        hideLeftButtonAnimation = new TranslateAnimation(0, (saveButton.getWidth() + 50) * -1,0, 0);
+        hideLeftButtonAnimation = new TranslateAnimation(0, (saveButton.getWidth() + 50) * -1, 0, 0);
         hideLeftButtonAnimation.setDuration(2000);
         hideLeftButtonAnimation.setStartOffset(1500);
         hideLeftButtonAnimation.setFillAfter(true);
@@ -357,7 +359,7 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
         hideLeftButtonAnimation.setInterpolator(new OvershootInterpolator());
         this.saveButton.startAnimation(hideLeftButtonAnimation);
 
-        hideRightButtonAnimation = new TranslateAnimation(0, (tryAgainButton.getWidth() + 50),0, 0);
+        hideRightButtonAnimation = new TranslateAnimation(0, (tryAgainButton.getWidth() + 50), 0, 0);
         hideRightButtonAnimation.setDuration(2000);
         hideRightButtonAnimation.setStartOffset(1500);
         hideRightButtonAnimation.setFillAfter(true);
@@ -368,8 +370,11 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
     }
 
 
-    /**** Actions ****/
+    /****
+     * Actions
+     ****/
     Animation showQuestionTextAnimation, hideQuestionTextAnimation, showAnswerTextAnimation, hideAnswerTextAnimation, hideAnswerTryAgainTextAnimation;
+
     public void showAnswer() {
 
         if (shakeAction == ShakeAction.NONE)
@@ -380,7 +385,7 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
             shakeAction = ShakeAction.NONE;
 
             this.questionText.setText(this.ctrlQuestionEdit.getText());
-            this.answerText.setText("I got three exact words for that - go fuck yourself");
+            this.answerText.setText(AnswerManager.getAnswer(this));
 
             // Hide keyboard
             View view = this.getCurrentFocus();
@@ -421,7 +426,9 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
     }
 
 
-    /**** GIF animation delegate ****/
+    /****
+     * GIF animation delegate
+     ****/
     public void gifAnimationDidStart(GIFObject object) {
 
     }
@@ -462,7 +469,9 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
 
     }
 
-    /**** UI animation delegate ****/
+    /****
+     * UI animation delegate
+     ****/
     public void onAnimationStart(Animation animation) {
 
         // Controls
@@ -511,7 +520,6 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
             this.ctrlQuestionEdit.setVisibility(View.GONE);
         if (animation == handAnimationHide) {
             this.handImageView.setVisibility(View.GONE);
-            Log.i("EPPYK", "Hide hand");
         }
         if (animation == shakeAnimationHide)
             this.ctrlShakeText.setVisibility(View.GONE);
@@ -522,6 +530,8 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
 
         if (animation == hideAnswerTryAgainTextAnimation) {
             this.answerText.setVisibility(View.GONE);
+
+            this.answerText.setText(AnswerManager.getAnswer(this));
 
             showAnswerTextAnimation = AnimationUtils.loadAnimation(this, R.anim.show_answer_text_animation);
             showAnswerTextAnimation.setAnimationListener(this);
@@ -555,7 +565,9 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
     }
 
 
-    /**** OnClick Listener ****/
+    /****
+     * OnClick Listener
+     ****/
     @Override
     public void onClick(View v) {
         if (v == tryAgainButton) {
@@ -571,7 +583,8 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
 
     private void tryAgain() {
         EventManager.trackEvent("Try again pressed", null);
-//        ctrlQuestionEdit.setText("");
+        shakeAction = ShakeAction.NONE;
+        ctrlQuestionEdit.setText("");
 
         // Hide Q&A
         hideAnswerTextAnimation = AnimationUtils.loadAnimation(this, R.anim.hide_answer_text_animation);
@@ -625,7 +638,7 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
                 saveButton.setAlpha(1);
                 tryAgainButton.setAlpha(1);
 
-                CapturePhotoUtils.insertImage(getContentResolver(), screenshot, filename, "");
+                ImageManager.insertImage(getContentResolver(), screenshot, filename, "");
             }
 
             @Override
