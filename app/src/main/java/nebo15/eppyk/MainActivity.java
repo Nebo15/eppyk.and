@@ -6,10 +6,14 @@ import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.OvershootInterpolator;
+import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -290,6 +294,49 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
         this.ctrlShakeText.startAnimation(shakeAnimationHide);
     }
 
+    Animation showLeftButtonAnimation, showRightButtonAnimation;
+    private void showButtons() {
+
+        showLeftButtonAnimation = new TranslateAnimation((saveButton.getWidth() + 50) * -1, 0,0, 0);
+        showLeftButtonAnimation.setDuration(2000);
+        showLeftButtonAnimation.setStartOffset(1000);
+        showLeftButtonAnimation.setFillAfter(true);
+        showLeftButtonAnimation.setAnimationListener(this);
+        showLeftButtonAnimation.setInterpolator(new OvershootInterpolator());
+        this.saveButton.startAnimation(showLeftButtonAnimation);
+
+        showRightButtonAnimation = new TranslateAnimation((tryAgainButton.getWidth() + 50), 0,0, 0);
+        showRightButtonAnimation.setDuration(2000);
+        showRightButtonAnimation.setStartOffset(1000);
+        showRightButtonAnimation.setFillAfter(true);
+        showRightButtonAnimation.setAnimationListener(this);
+        showRightButtonAnimation.setInterpolator(new OvershootInterpolator());
+        this.tryAgainButton.startAnimation(showRightButtonAnimation);
+
+    }
+
+    Animation hideLeftButtonAnimation, hideRightButtonAnimation;
+    private void hideButtons() {
+
+        hideLeftButtonAnimation = new TranslateAnimation(0, (saveButton.getWidth() + 50) * -1,0, 0);
+        hideLeftButtonAnimation.setDuration(2000);
+        hideLeftButtonAnimation.setStartOffset(1500);
+        hideLeftButtonAnimation.setFillAfter(true);
+        hideLeftButtonAnimation.setAnimationListener(this);
+        hideLeftButtonAnimation.setInterpolator(new OvershootInterpolator());
+        this.saveButton.startAnimation(hideLeftButtonAnimation);
+
+        hideRightButtonAnimation = new TranslateAnimation(0, (tryAgainButton.getWidth() + 50),0, 0);
+        hideRightButtonAnimation.setDuration(2000);
+        hideRightButtonAnimation.setStartOffset(1500);
+        hideRightButtonAnimation.setFillAfter(true);
+        hideRightButtonAnimation.setAnimationListener(this);
+        hideRightButtonAnimation.setInterpolator(new OvershootInterpolator());
+        this.tryAgainButton.startAnimation(hideRightButtonAnimation);
+
+    }
+
+
 
     /**** Actions ****/
     Animation showQuestionTextAnimation, hideQuestionTextAnimation, showAnswerTextAnimation, hideAnswerTextAnimation, hideAnswerTryAgainTextAnimation;
@@ -331,6 +378,9 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
             showAnswerTextAnimation.setAnimationListener(this);
             showAnswerTextAnimation.setFillAfter(true);
             this.answerText.startAnimation(showAnswerTextAnimation);
+
+            // Show buttons
+            showButtons();
         }
 
         if (shakeAction == ShakeAction.TRYAGAIN) {
@@ -339,7 +389,6 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
             hideAnswerTryAgainTextAnimation.setAnimationListener(this);
             hideAnswerTryAgainTextAnimation.setFillAfter(true);
             this.answerText.startAnimation(hideAnswerTryAgainTextAnimation);
-
         }
     }
 
@@ -409,6 +458,16 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
             this.answerText.setVisibility(View.VISIBLE);
         }
 
+        if (animation == showLeftButtonAnimation) {
+            this.saveButton.setAlpha(1);
+            this.saveButton.setEnabled(true);
+        }
+
+        if (animation == showRightButtonAnimation) {
+            this.tryAgainButton.setAlpha(1);
+            this.tryAgainButton.setEnabled(true);
+        }
+
     }
 
     public void onAnimationEnd(Animation animation) {
@@ -447,6 +506,16 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
             controlsUIAnimationShow();
         }
 
+        if (animation == hideLeftButtonAnimation) {
+            this.saveButton.setAlpha(0);
+            this.saveButton.setEnabled(false);
+        }
+
+        if (animation == hideRightButtonAnimation) {
+            this.tryAgainButton.setAlpha(0);
+            this.tryAgainButton.setEnabled(false);
+        }
+
     }
 
     public void onAnimationRepeat(Animation animation) {
@@ -478,6 +547,9 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
             // Stars return
             starsGifView.setGif(starsGifBack);
             starsGifView.play();
+
+            // Hide buttons
+            hideButtons();
 
         }
     }

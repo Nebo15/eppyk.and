@@ -11,8 +11,6 @@
     tools:context=".MainActivity">
 
 
-
-
     <ImageView
         android:id="@+id/StarsGifView1"
         android:layout_width="match_parent"
@@ -20,8 +18,7 @@
         android:layout_alignParentBottom="true"
         android:scaleType="fitCenter"
         android:src="@drawable/star_begin"
-        android:visibility="gone"
-        />
+        android:visibility="gone" />
 
     <nebo15.eppyk.gif.GIFView
         android:id="@+id/StarsGifView"
@@ -29,8 +26,7 @@
         android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
         android:scaleType="fitCenter"
-        android:src="@drawable/star_begin"
-        />
+        android:src="@drawable/star_begin" />
 
 
     <!-- Control UI -->
@@ -182,7 +178,9 @@
             android:layout_margin="5dip"
             android:layout_weight="1"
             android:text="@string/button_save_answer"
-            android:textAllCaps="false" />
+            android:textAllCaps="false"
+            android:alpha="0"
+            android:enabled="false"/>
 
         <Button
             android:id="@+id/TryAgainButton"
@@ -192,7 +190,9 @@
             android:layout_margin="5dip"
             android:layout_weight="1"
             android:text="@string/button_try_again"
-            android:textAllCaps="false" />
+            android:textAllCaps="false"
+            android:alpha="0"
+            android:enabled="false"/>
 
     </LinearLayout>
 
