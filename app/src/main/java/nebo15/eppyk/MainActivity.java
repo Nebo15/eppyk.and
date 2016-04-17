@@ -56,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
     GIFView dogImageView;
 
     GIFView starsGifView;
+    ImageView starsGifView1;
 
     // Stars
     GIFObject starsGifBegin;
@@ -92,7 +93,6 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
 
         });
 
-
         loadGifs();
 
         this.fontGeneral = Typeface.createFromAsset(getAssets(), "Geometria.otf");
@@ -104,6 +104,8 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
 
         // Animation
         this.starsGifView = (GIFView) findViewById(R.id.StarsGifView);
+        this.starsGifView1 = (ImageView) findViewById(R.id.StarsGifView1);
+
         this.manImageView = (GIFView) findViewById(R.id.ManImageView);
         this.dogImageView = (GIFView) findViewById(R.id.DogImageView);
 
@@ -187,7 +189,8 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
         manGifCatch = new GIFObject(getResources().openRawResource(R.drawable.man_star_catch), 21);
         manGifCatch.loopsCount = 1;
 
-        manGifDrop = new GIFObject(getResources().openRawResource(R.drawable.man_star_drop), 42);
+        // Really 42 frames but should be 50. Just because!
+        manGifDrop = new GIFObject(getResources().openRawResource(R.drawable.man_star_drop), 50);
         manGifDrop.loopsCount = 1;
 
         manMoves[0] = new GIFObject(getResources().openRawResource(R.drawable.man_move_1), 57);
@@ -299,6 +302,8 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
             if (ctrlQuestionEdit.getText().length() == 0)
                 return;
 
+            shakeAction = ShakeAction.NONE;
+
             this.questionText.setText(this.ctrlQuestionEdit.getText());
             this.answerText.setText("I got three exact words for that - go fuck yourself");
 
@@ -372,7 +377,7 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
     }
 
     public void gifAnimationShowFrame(GIFObject object, int frameIndex) {
-        if (object == starsGifDrop && frameIndex == 20) {
+        if (object == starsGifDrop && frameIndex == 11) {
             // Man catch the star
             manImageView.setGif(manGifCatch);
             manImageView.play();

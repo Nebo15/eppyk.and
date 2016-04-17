@@ -5,6 +5,9 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PaintFlagsDrawFilter;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -18,7 +21,6 @@ public class GIFView extends View {
     private int mMovieResourceId;
     private GIFObject mGifObject;
 
-    private long mMovieStart;
     private int mCurrentAnimationTime = 0;
     private int mCurrentFrame = 0;
     private int mCurrentLoop = 0;
@@ -112,7 +114,7 @@ public class GIFView extends View {
 
     public void play() {
         this.mPaused = false;
-         mMovieStart = android.os.SystemClock.uptimeMillis() - mCurrentAnimationTime;
+        mMovieStart = 0;
         invalidate();
 
         if (handler != null)
@@ -132,57 +134,6 @@ public class GIFView extends View {
     }
 
     @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-
-        if (mGifObject != null && mGifObject.movie != null) {
-            int movieWidth = mGifObject.movie.width();
-            int movieHeight = mGifObject.movie.height();
-
-			/*
-			 * Calculate horizontal scaling
-			 */
-            float scaleH = 1f;
-            int measureModeWidth = MeasureSpec.getMode(widthMeasureSpec);
-
-            if (measureModeWidth != MeasureSpec.UNSPECIFIED) {
-                int maximumWidth = MeasureSpec.getSize(widthMeasureSpec);
-                if (movieWidth > maximumWidth) {
-                    scaleH = (float) movieWidth / (float) maximumWidth;
-                }
-            }
-
-			/*
-			 * calculate vertical scaling
-			 */
-            float scaleW = 1f;
-            int measureModeHeight = MeasureSpec.getMode(heightMeasureSpec);
-
-            if (measureModeHeight != MeasureSpec.UNSPECIFIED) {
-                int maximumHeight = MeasureSpec.getSize(heightMeasureSpec);
-                if (movieHeight > maximumHeight) {
-                    scaleW = (float) movieHeight / (float) maximumHeight;
-                }
-            }
-
-			/*
-			 * calculate overall scale
-			 */
-            mScale = 1f / Math.max(scaleH, scaleW);
-
-            mMeasuredMovieWidth = (int) (movieWidth * mScale);
-            mMeasuredMovieHeight = (int) (movieHeight * mScale);
-
-            setMeasuredDimension(mMeasuredMovieWidth, mMeasuredMovieHeight);
-
-        } else {
-			/*
-			 * No movie set, just set minimum available size.
-			 */
-            setMeasuredDimension(getSuggestedMinimumWidth(), getSuggestedMinimumHeight());
-        }
-    }
-
-    @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         super.onLayout(changed, l, t, r, b);
 
@@ -195,9 +146,9 @@ public class GIFView extends View {
         mVisible = getVisibility() == View.VISIBLE;
     }
 
-    int f = 0;
     @Override
     protected void onDraw(Canvas canvas) {
+
         if (mGifObject != null && mGifObject.movie != null) {
             if (!mPaused) {
                 updateAnimationTime();
@@ -247,15 +198,21 @@ public class GIFView extends View {
 //        mCurrentAnimationTime = (int) ((now - mMovieStart) % dur);
 //    }
 
-   private void updateAnimationTime() {
+    private long mMovieStart;
+    private void updateAnimationTime() {
+       long now = android.os.SystemClock.uptimeMillis();
         int dur = mGifObject.framesCount * 60;
-//       Log.i("GIF", String.format("Duration %d", dur) );
+
+       if (mMovieStart == 0) {
+           mMovieStart = now;
+       }
+
         if (dur == 0) {
             dur = DEFAULT_MOVIEW_DURATION;
         }
 
-       mCurrentAnimationTime = (mCurrentFrame * 30);
-//       Log.i("GIF", String.format("%d - %d", mCurrentFrame, mCurrentAnimationTime) );
+        mCurrentAnimationTime = (mCurrentFrame * 60);
+        mCurrentAnimationTime = (int) ((now - mMovieStart) % dur);
     }
 
     /**
@@ -270,14 +227,26 @@ public class GIFView extends View {
         }
 
         mGifObject.movie.setTime(mCurrentAnimationTime);
-        canvas.save(Canvas.MATRIX_SAVE_FLAG);
+
+        float width = this.getWidth();
+        float height= this.getHeight();
+
+        float gifWidth = mGifObject.movie.width();
+        float gifHeight = mGifObject.movie.height();
+        mScale = Math.max(width / gifWidth, height / gifHeight);
+
+        canvas.save(Canvas.ALL_SAVE_FLAG);
+        canvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG));
         canvas.scale(mScale, mScale);
-        mGifObject.movie.draw(canvas, mLeft / mScale, mTop / mScale);
+        mGifObject.movie.draw(canvas, 0, 0);
         canvas.restore();
+
 
         if (handler != null)
             handler.gifAnimationShowFrame(mGifObject, mCurrentFrame);
     }
+
+
 
     private void finishLoop() {
         mCurrentLoop++;

@@ -9,7 +9,7 @@
         android:fromXDelta="0"
         android:fromYDelta="0"
         android:toXDelta="0"
-        android:toYDelta="-400" />
+        android:toYDelta="-380" />
 
     <scale
         android:duration="1200"

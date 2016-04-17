@@ -13,6 +13,6 @@ public class GIFObject {
 
     public GIFObject(InputStream resourcetream, int framesCount) {
         this.movie = Movie.decodeStream(resourcetream);
-        this.framesCount = framesCount * 2;
+        this.framesCount = framesCount;
     }
 }
