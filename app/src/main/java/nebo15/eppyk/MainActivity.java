@@ -1,15 +1,20 @@
 package nebo15.eppyk;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Typeface;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.OvershootInterpolator;
@@ -17,13 +22,22 @@ import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.text.DateFormat;
+import java.util.Date;
+import java.util.Random;
 
 import nebo15.eppyk.gif.GIFObject;
 import nebo15.eppyk.gif.GIFView;
 import nebo15.eppyk.gif.IGIFEvent;
 import nebo15.eppyk.listeners.ShakeEventListener;
+import nebo15.eppyk.managers.CapturePhotoUtils;
+import nebo15.eppyk.managers.ImageManager;
 
 
 public class MainActivity extends AppCompatActivity implements Animation.AnimationListener, IGIFEvent, View.OnClickListener {
@@ -46,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
     TextView ctrlShakeText;
     EditText questionText;
     TextView answerText;
+    FrameLayout whiteView;
 
     Button saveButton;
     Button tryAgainButton;
@@ -151,6 +166,8 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
         this.tryAgainButton = (Button)findViewById(R.id.TryAgainButton);
         this.tryAgainButton.setTypeface(fontGeneralBold);
         this.tryAgainButton.setOnClickListener(this);
+
+        this.whiteView = (FrameLayout)findViewById(R.id.WhiteView);
 
         prepareAnimation();
         startAnimation();
@@ -298,7 +315,7 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
     private void showButtons() {
 
         showLeftButtonAnimation = new TranslateAnimation((saveButton.getWidth() + 50) * -1, 0,0, 0);
-        showLeftButtonAnimation.setDuration(2000);
+        showLeftButtonAnimation.setDuration(1000);
         showLeftButtonAnimation.setStartOffset(1000);
         showLeftButtonAnimation.setFillAfter(true);
         showLeftButtonAnimation.setAnimationListener(this);
@@ -306,7 +323,7 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
         this.saveButton.startAnimation(showLeftButtonAnimation);
 
         showRightButtonAnimation = new TranslateAnimation((tryAgainButton.getWidth() + 50), 0,0, 0);
-        showRightButtonAnimation.setDuration(2000);
+        showRightButtonAnimation.setDuration(1000);
         showRightButtonAnimation.setStartOffset(1000);
         showRightButtonAnimation.setFillAfter(true);
         showRightButtonAnimation.setAnimationListener(this);
@@ -335,7 +352,6 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
         this.tryAgainButton.startAnimation(hideRightButtonAnimation);
 
     }
-
 
 
     /**** Actions ****/
@@ -516,6 +532,7 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
             this.tryAgainButton.setEnabled(false);
         }
 
+
     }
 
     public void onAnimationRepeat(Animation animation) {
@@ -528,30 +545,83 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
     @Override
     public void onClick(View v) {
         if (v == tryAgainButton) {
-            // Hide Q&A
-            hideAnswerTextAnimation = AnimationUtils.loadAnimation(this, R.anim.hide_answer_text_animation);
-            hideAnswerTextAnimation.setAnimationListener(this);
-            hideAnswerTextAnimation.setFillAfter(true);
-            this.answerText.startAnimation(hideAnswerTextAnimation);
-
-            hideQuestionTextAnimation = AnimationUtils.loadAnimation(this, R.anim.hide_question_text_animation);
-            hideQuestionTextAnimation.setAnimationListener(this);
-            hideQuestionTextAnimation.setFillAfter(true);
-            hideQuestionTextAnimation.setStartOffset(0);
-            this.questionText.startAnimation(hideQuestionTextAnimation);
-
-            // Man drop star
-            manImageView.setGif(manGifDrop);
-            manImageView.play();
-
-            // Stars return
-            starsGifView.setGif(starsGifBack);
-            starsGifView.play();
-
-            // Hide buttons
-            hideButtons();
-
+            tryAgain();
         }
+
+        if (v == saveButton) {
+            // Make screenshot
+            makeScreenshot();
+        }
+
     }
+
+    private void tryAgain() {
+        // Hide Q&A
+        hideAnswerTextAnimation = AnimationUtils.loadAnimation(this, R.anim.hide_answer_text_animation);
+        hideAnswerTextAnimation.setAnimationListener(this);
+        hideAnswerTextAnimation.setFillAfter(true);
+        this.answerText.startAnimation(hideAnswerTextAnimation);
+
+        hideQuestionTextAnimation = AnimationUtils.loadAnimation(this, R.anim.hide_question_text_animation);
+        hideQuestionTextAnimation.setAnimationListener(this);
+        hideQuestionTextAnimation.setFillAfter(true);
+        hideQuestionTextAnimation.setStartOffset(0);
+        this.questionText.startAnimation(hideQuestionTextAnimation);
+
+        // Man drop star
+        manImageView.setGif(manGifDrop);
+        manImageView.play();
+
+        // Stars return
+        starsGifView.setGif(starsGifBack);
+        starsGifView.play();
+
+        // Hide buttons
+        hideButtons();
+    }
+
+    private void makeScreenshot() {
+
+
+        whiteView.setVisibility(View.VISIBLE);
+
+        AlphaAnimation fade = new AlphaAnimation(1, 0);
+        fade.setDuration(50);
+        fade.setAnimationListener(new Animation.AnimationListener() {
+
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation anim) {
+                whiteView.setVisibility(View.GONE);
+
+                View rootView = getWindow().getDecorView().findViewById(android.R.id.content);
+                String filename = String.format("%s %s", getString(R.string.app_name), ctrlQuestionEdit.getText());
+
+                saveButton.setAlpha(0);
+                tryAgainButton.setAlpha(0);
+
+                Bitmap screenshot = ImageManager.getScreenShot(rootView, MainActivity.this);
+
+                saveButton.setAlpha(1);
+                tryAgainButton.setAlpha(1);
+
+                CapturePhotoUtils.insertImage(getContentResolver(), screenshot, filename, "");
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+
+        });
+        whiteView.startAnimation(fade);
+
+    }
+
+
 
 }
