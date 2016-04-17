@@ -2,18 +2,13 @@ package nebo15.eppyk;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Typeface;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -26,15 +21,12 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.text.DateFormat;
-import java.util.Date;
-import java.util.Random;
+import java.util.HashMap;
 
 import nebo15.eppyk.gif.GIFObject;
 import nebo15.eppyk.gif.GIFView;
 import nebo15.eppyk.gif.IGIFEvent;
+import nebo15.eppyk.listeners.EventManager;
 import nebo15.eppyk.listeners.ShakeEventListener;
 import nebo15.eppyk.managers.CapturePhotoUtils;
 import nebo15.eppyk.managers.ImageManager;
@@ -93,12 +85,15 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
     GIFObject handGif;
     GIFObject dogMoves[] = new GIFObject[3];
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Mixpanel init
+        EventManager.init(MainActivity.this);
+
+        EventManager.trackEvent("Application start", null);
 
         // Shake
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
@@ -107,6 +102,19 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
         mSensorListener.setOnShakeListener(new ShakeEventListener.OnShakeListener() {
 
             public void onShake() {
+                if (ctrlQuestionEdit.getText().length() == 0)
+                    return;
+
+                if (shakeAction == ShakeAction.ANSWER) {
+                    HashMap<String, String> params = new HashMap<String, String>();
+                    params.put("Question", ctrlQuestionEdit.getText().toString());
+                    EventManager.trackEvent("Shake for answer", params);
+                }
+                else if (shakeAction == ShakeAction.TRYAGAIN) {
+                    HashMap<String, String> params = new HashMap<String, String>();
+                    params.put("Question", ctrlQuestionEdit.getText().toString());
+                    EventManager.trackEvent("Shake for another answer", params);
+                }
                 showAnswer();
             }
 
@@ -137,7 +145,12 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
         this.ctrlQuestionEdit.setOnKeyListener(new View.OnKeyListener() {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
-                    // Perform action on key press
+                    if (ctrlQuestionEdit.getText().length() == 0)
+                        return true;
+
+                    HashMap<String, String> params = new HashMap<String, String>();
+                    params.put("Question", ctrlQuestionEdit.getText().toString());
+                    EventManager.trackEvent("Go press for answer", params);
                     showAnswer();
                     return true;
                 }
@@ -362,8 +375,6 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
             return;
 
         if (shakeAction == ShakeAction.ANSWER) {
-            if (ctrlQuestionEdit.getText().length() == 0)
-                return;
 
             shakeAction = ShakeAction.NONE;
 
@@ -556,6 +567,9 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
     }
 
     private void tryAgain() {
+        EventManager.trackEvent("Try again pressed", null);
+        ctrlQuestionEdit.setText("");
+
         // Hide Q&A
         hideAnswerTextAnimation = AnimationUtils.loadAnimation(this, R.anim.hide_answer_text_animation);
         hideAnswerTextAnimation.setAnimationListener(this);
@@ -581,8 +595,7 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
     }
 
     private void makeScreenshot() {
-
-
+        EventManager.trackEvent("Screenshot pressed", null);
         whiteView.setVisibility(View.VISIBLE);
 
         AlphaAnimation fade = new AlphaAnimation(1, 0);
@@ -616,12 +629,9 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
             public void onAnimationRepeat(Animation animation) {
 
             }
-
         });
         whiteView.startAnimation(fade);
-
     }
-
 
 
 }
