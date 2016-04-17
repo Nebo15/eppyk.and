@@ -247,7 +247,6 @@ public class GIFView extends View {
     }
 
 
-
     private void finishLoop() {
         mCurrentLoop++;
         mCurrentFrame = 0;
@@ -255,6 +254,7 @@ public class GIFView extends View {
         if (mGifObject.loopsCount != 0) {
             if (mCurrentLoop == mGifObject.loopsCount) {
                 mCurrentFrame = mGifObject.framesCount-1;
+                mCurrentAnimationTime = mGifObject.framesCount * 60;
                 finishAnimation();
             }
         }

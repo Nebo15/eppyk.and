@@ -5,13 +5,13 @@
 
     <!-- Use your working translate animation here-->
     <translate
-        android:duration="3000"
+        android:duration="1500"
         android:fillAfter="true"
         android:fromYDelta="0"
         android:toYDelta="-145" />
 
     <alpha
-        android:duration="3000"
+        android:duration="1500"
         android:fillAfter="true"
         android:fromAlpha="1.0"
         android:toAlpha="0"

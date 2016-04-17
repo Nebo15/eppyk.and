@@ -7,6 +7,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
@@ -52,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
     TextView ctrlShakeText;
     EditText questionText;
     TextView answerText;
-    FrameLayout whiteView;
+    View whiteView;
 
     Button saveButton;
     Button tryAgainButton;
@@ -180,7 +181,7 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
         this.tryAgainButton.setTypeface(fontGeneralBold);
         this.tryAgainButton.setOnClickListener(this);
 
-        this.whiteView = (FrameLayout)findViewById(R.id.WhiteView);
+        this.whiteView = (View)findViewById(R.id.WhiteView);
 
         prepareAnimation();
         startAnimation();
@@ -471,8 +472,9 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
             this.ctrlQuestionEdit.setVisibility(View.VISIBLE);
             this.ctrlQuestionEdit.layout(this.ctrlQuestionEdit.getLeft(), this.ctrlQuestionEdit.getTop() - 145, this.ctrlQuestionEdit.getRight(), this.ctrlQuestionEdit.getBottom() - 145);
         }
-        if (animation == handAnimationShow)
+        if (animation == handAnimationShow) {
             this.handImageView.setVisibility(View.VISIBLE);
+        }
         if (animation == shakeAnimationShow) {
             this.ctrlShakeText.setVisibility(View.VISIBLE);
             shakeAction = ShakeAction.ANSWER;
@@ -507,8 +509,10 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
             this.ctrlWhatIsYourQuestion.setVisibility(View.GONE);
         if (animation == editAnimationHide)
             this.ctrlQuestionEdit.setVisibility(View.GONE);
-        if (animation == handAnimationHide)
+        if (animation == handAnimationHide) {
             this.handImageView.setVisibility(View.GONE);
+            Log.i("EPPYK", "Hide hand");
+        }
         if (animation == shakeAnimationHide)
             this.ctrlShakeText.setVisibility(View.GONE);
 
@@ -548,7 +552,6 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
 
     public void onAnimationRepeat(Animation animation) {
 
-
     }
 
 
@@ -568,7 +571,7 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
 
     private void tryAgain() {
         EventManager.trackEvent("Try again pressed", null);
-        ctrlQuestionEdit.setText("");
+//        ctrlQuestionEdit.setText("");
 
         // Hide Q&A
         hideAnswerTextAnimation = AnimationUtils.loadAnimation(this, R.anim.hide_answer_text_animation);

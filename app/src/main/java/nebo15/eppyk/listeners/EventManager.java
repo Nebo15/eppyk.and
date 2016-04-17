@@ -34,7 +34,6 @@ public class EventManager {
         } catch (JSONException e) {
             Log.e("EPPYK", "Unable to add properties to JSONObject", e);
         }
-
     }
 
 }
