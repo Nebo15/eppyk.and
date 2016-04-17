@@ -7,6 +7,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
@@ -17,10 +18,13 @@ import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.HashMap;
+import java.util.List;
 
 import nebo15.eppyk.gif.GIFObject;
 import nebo15.eppyk.gif.GIFView;
@@ -29,9 +33,10 @@ import nebo15.eppyk.listeners.EventManager;
 import nebo15.eppyk.listeners.ShakeEventListener;
 import nebo15.eppyk.managers.AnswerManager;
 import nebo15.eppyk.managers.ImageManager;
+import nebo15.eppyk.managers.UpdateManager;
 
 
-public class MainActivity extends AppCompatActivity implements Animation.AnimationListener, IGIFEvent, View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements Animation.AnimationListener, IGIFEvent, View.OnClickListener, UpdateManager.APICallback {
 
     public enum ShakeAction {
         ANSWER, TRYAGAIN, NONE
@@ -53,6 +58,8 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
     TextView answerText;
     View whiteView;
 
+
+    ImageButton globusButton;
     Button saveButton;
     Button tryAgainButton;
 
@@ -181,6 +188,9 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
 
         this.whiteView = (View) findViewById(R.id.WhiteView);
 
+        this.globusButton = (ImageButton)findViewById(R.id.GlobusButton);
+        this.globusButton.setOnClickListener(this);
+
         prepareAnimation();
         startAnimation();
 
@@ -250,6 +260,7 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
         this.manImageView.play();
         this.starsGifView.play();
         this.startUIAnimation();
+
     }
 
     /// Animation Actions
@@ -579,6 +590,10 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
             makeScreenshot();
         }
 
+        if (v == globusButton) {
+            l10nViewRequest();
+        }
+
     }
 
     private void tryAgain() {
@@ -632,11 +647,13 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
 
                 saveButton.setAlpha(0);
                 tryAgainButton.setAlpha(0);
+                globusButton.setAlpha(0);
 
                 Bitmap screenshot = ImageManager.getScreenShot(rootView, MainActivity.this);
 
                 saveButton.setAlpha(1);
                 tryAgainButton.setAlpha(1);
+                globusButton.setAlpha(1);
 
                 ImageManager.insertImage(getContentResolver(), screenshot, filename, "");
             }
@@ -649,5 +666,28 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
         whiteView.startAnimation(fade);
     }
 
+    private void l10nViewRequest() {
+        UpdateManager.getInstance().loadL10ns();
+    }
+
+
+    /****
+     * API Callback
+     ****/
+    @Override
+    public void apiL10NsLoaded(List items) {
+        Log.i("EPPYK", "Show L10n view");
+        UpdateManager.getInstance().loadAnswers("ru_RU");
+    }
+
+    @Override
+    public void apiAnswersLoaded(List items) {
+        Log.i("EPPYK", "Update answers");
+    }
+
+    @Override
+    public void apiFail(String error) {
+        Toast.makeText(this, error, Toast.LENGTH_LONG);
+    }
 
 }
