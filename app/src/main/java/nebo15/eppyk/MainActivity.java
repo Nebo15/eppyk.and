@@ -97,8 +97,9 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
 
         // Mixpanel init
         EventManager.init(MainActivity.this);
-
         EventManager.trackEvent("Application start", null);
+
+        UpdateManager.getInstance().callback = this;
 
         // Shake
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
@@ -630,7 +631,7 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
         whiteView.setVisibility(View.VISIBLE);
 
         AlphaAnimation fade = new AlphaAnimation(1, 0);
-        fade.setDuration(50);
+        fade.setDuration(400);
         fade.setAnimationListener(new Animation.AnimationListener() {
 
             @Override
@@ -645,15 +646,15 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
                 View rootView = getWindow().getDecorView().findViewById(android.R.id.content);
                 String filename = String.format("%s %s", getString(R.string.app_name), ctrlQuestionEdit.getText());
 
-                saveButton.setAlpha(0);
-                tryAgainButton.setAlpha(0);
-                globusButton.setAlpha(0);
+                saveButton.setAlpha(0f);
+                tryAgainButton.setAlpha(0f);
+                globusButton.setAlpha(0f);
 
                 Bitmap screenshot = ImageManager.getScreenShot(rootView, MainActivity.this);
 
-                saveButton.setAlpha(1);
-                tryAgainButton.setAlpha(1);
-                globusButton.setAlpha(1);
+                saveButton.setAlpha(1.0f);
+                tryAgainButton.setAlpha(1.0f);
+                globusButton.setAlpha(1.0f);
 
                 ImageManager.insertImage(getContentResolver(), screenshot, filename, "");
             }
@@ -667,6 +668,8 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
     }
 
     private void l10nViewRequest() {
+        EventManager.trackEvent("Language select show", null);
+        
         UpdateManager.getInstance().loadL10ns();
     }
 
