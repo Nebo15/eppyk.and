@@ -176,10 +176,10 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dip"
             android:layout_weight="1"
-            android:text="@string/button_save_answer"
-            android:textAllCaps="false"
             android:alpha="0"
-            android:enabled="false"/>
+            android:enabled="false"
+            android:text="@string/button_save_answer"
+            android:textAllCaps="false" />
 
         <Button
             android:id="@+id/TryAgainButton"
@@ -188,10 +188,10 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dip"
             android:layout_weight="1"
-            android:text="@string/button_try_again"
-            android:textAllCaps="false"
             android:alpha="0"
-            android:enabled="false"/>
+            android:enabled="false"
+            android:text="@string/button_try_again"
+            android:textAllCaps="false" />
 
     </LinearLayout>
 
@@ -200,19 +200,28 @@
         android:id="@+id/GlobusButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@mipmap/globe"
-        android:background="@null"
         android:layout_marginLeft="20dip"
         android:layout_marginTop="20dip"
-        />
+        android:background="@null"
+        android:src="@mipmap/globe" />
 
     <View
         android:id="@+id/WhiteView"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:background="@android:color/white"
-        android:visibility="gone"
+        android:visibility="gone" />
+
+
+
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/l10nFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="5dip"
+        android:alpha="0.8"
         />
+
 
 
 </RelativeLayout>

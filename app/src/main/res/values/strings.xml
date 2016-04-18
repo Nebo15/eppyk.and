@@ -5,14 +5,22 @@
     <string name="and_shake">AND SHAKE YOUR PHONE TO GET THE ANSWER</string>
     <string name="button_save_answer">Save the answer</string>
     <string name="button_try_again">Try again</string>
+    <string name="l10n_title">SELECT LANGUAGE</string>
+    <string name="button_done">DONE</string>
+    <string name="l10n_hint">SELECT WISELY BUT REMEMBER THAT YOU\'RE ALWAYS CAN CHANGE YOUR CHOICE PRETTY EASY BY TAPING ON GLOBE IN THE TOP LEFT CORNER :)</string>
 
 
 
-    <string name="answers_count">5</string>
-    <string name="answer_0">Ok, do it</string>
+
+
+    <!-- Answers sector -->
+    <string name="answers_count">5</string> <!-- pre-installed answers count -->
+    <string name="answer_0">Ok, do it</string> <!-- each answer has name "answer_N", where N - number [0, pre-installed answers count)  -->
     <string name="answer_1">No, not today</string>
     <string name="answer_2">Are you insane?</string>
     <string name="answer_3">Bad idea</string>
     <string name="answer_4">Yes, you should do it right now</string>
+
+
 
 </resources>

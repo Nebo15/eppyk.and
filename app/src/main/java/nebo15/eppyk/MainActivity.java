@@ -1,5 +1,8 @@
 package nebo15.eppyk;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
@@ -63,7 +66,6 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
     Button saveButton;
     Button tryAgainButton;
 
-
     // UI Ainmations
     ImageView planetImageView;
     ImageView logoImageView;
@@ -99,7 +101,10 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
         EventManager.init(MainActivity.this);
         EventManager.trackEvent("Application start", null);
 
+        // Networking
         UpdateManager.getInstance().callback = this;
+
+        // Fragment
 
         // Shake
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
@@ -189,7 +194,7 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
 
         this.whiteView = (View) findViewById(R.id.WhiteView);
 
-        this.globusButton = (ImageButton)findViewById(R.id.GlobusButton);
+        this.globusButton = (ImageButton) findViewById(R.id.GlobusButton);
         this.globusButton.setOnClickListener(this);
 
         prepareAnimation();
@@ -669,8 +674,24 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
 
     private void l10nViewRequest() {
         EventManager.trackEvent("Language select show", null);
-        
         UpdateManager.getInstance().loadL10ns();
+
+        FragmentManager fm = getFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
+
+
+        L10nFragment fragmentL10n = new L10nFragment();
+        ft.add(R.id.l10nFragment, fragmentL10n).commit();
+
+//        if (fragmentL10n.isHidden()) {
+//            ft.show(fragmentL10n);
+//        } else {
+//            ft.hide(fragmentL10n);
+//        }
+//
+//        ft.commit();
+
     }
 
 
@@ -692,5 +713,6 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
     public void apiFail(String error) {
         Toast.makeText(this, error, Toast.LENGTH_LONG);
     }
+
 
 }
