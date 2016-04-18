@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">EPPYK</string>
+    <string name="what_is_your_question">КАКОЙ У ТЕБЯ ВОПРОС?</string>
+    <string name="ask_it_here">задай его здесь</string>
+    <string name="and_shake">И ПОТРЯСИ СВОЙ ТЕЛЕФОН, ЧТО БЫ ПОЛУЧИТЬ ОТВЕТ</string>
+    <string name="button_save_answer">Сохранить ответ</string>
+    <string name="button_try_again">Еще раз</string>
+    <string name="l10n_title">ВЫБРАТЬ ЯЗЫК</string>
+    <string name="button_done">ГОТОВО</string>
+    <string name="l10n_hint">ВЫБИРАЙ МУДРО, НО ПОМНИ, ЧТО ТЫ ВСЕГДА МОЖЕШЬ ДОСТАТОЧНО ПРОСТО ИЗМЕНИТЬ НАСТРОЙКИ, ПРОСТО ТАПНИ ПО ГЛОБУСУ В ВЕРХНЕМ ЛЕВОМ УГЛУ ;)</string>
+
+
+    <string name="answers_count">7</string> <!-- pre-installed answers count -->
+    <string name="answer_0">Твою мать, ну конечно!</string> <!-- each answer has name "answer_N", where N - number [0, pre-installed answers count)  -->
+    <string name="answer_1">Ну и тупые у тебя вопросы… Да</string>
+    <string name="answer_2">Звучит хорошо</string>
+    <string name="answer_3">Херня какая-то</string>
+    <string name="answer_4">Да, но не сейчас</string>
+    <string name="answer_5">Начинай прямо сейчас</string>
+    <string name="answer_6">У меня ответы закончились</string>
+
+
+
+</resources>
