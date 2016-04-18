@@ -5,7 +5,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PaintFlagsDrawFilter;
 import android.os.Build;
@@ -26,11 +25,13 @@ public class GIFView extends View {
     private int mCurrentLoop = 0;
     private IGIFEvent handler;
 
+
+
     /**
-     * Position for drawing animation frames in the center of the view.
+     * Animation speed
      */
-    private float mLeft;
-    private float mTop;
+    private final int sourceImageFrameDuration = 60;
+    private final int animationFrameDuration = 50;
 
     /**
      * Scaling factor to fit the animation within view bounds.
@@ -128,20 +129,9 @@ public class GIFView extends View {
             handler.gifAnimationDidStop(mGifObject);
     }
 
-
-    public boolean isPaused() {
-        return this.mPaused;
-    }
-
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         super.onLayout(changed, l, t, r, b);
-
-		/*
-		 * Calculate left / top for drawing in center
-		 */
-        mLeft = (getWidth() - mMeasuredMovieWidth) / 2f;
-        mTop = (getHeight() - mMeasuredMovieHeight) / 2f;
 
         mVisible = getVisibility() == View.VISIBLE;
     }
@@ -201,18 +191,12 @@ public class GIFView extends View {
     private long mMovieStart;
     private void updateAnimationTime() {
        long now = android.os.SystemClock.uptimeMillis();
-        int dur = mGifObject.framesCount * 60;
 
        if (mMovieStart == 0) {
            mMovieStart = now;
        }
 
-        if (dur == 0) {
-            dur = DEFAULT_MOVIEW_DURATION;
-        }
-
-        mCurrentAnimationTime = (mCurrentFrame * 60);
-        mCurrentAnimationTime = (int) ((now - mMovieStart) % dur);
+        mCurrentAnimationTime = (mCurrentFrame * sourceImageFrameDuration);
     }
 
     /**
@@ -221,8 +205,10 @@ public class GIFView extends View {
      */
     private void drawMovieFrame(Canvas canvas) {
 
-        mCurrentFrame++;
-        if (mCurrentFrame == mGifObject.framesCount) {
+        long now = android.os.SystemClock.uptimeMillis();
+
+        mCurrentFrame = (int)(now - mMovieStart) / animationFrameDuration;
+        if (mCurrentFrame >= mGifObject.framesCount) {
             finishLoop();
         }
 
@@ -248,6 +234,7 @@ public class GIFView extends View {
 
 
     private void finishLoop() {
+        mMovieStart = 0;
         mCurrentLoop++;
         mCurrentFrame = 0;
 
@@ -264,6 +251,7 @@ public class GIFView extends View {
 
     private void finishAnimation() {
         this.stop();
+
         if (handler != null)
             handler.gifAnimationDidFinish(mGifObject);
     }

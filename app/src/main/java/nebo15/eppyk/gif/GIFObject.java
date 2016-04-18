@@ -11,8 +11,8 @@ public class GIFObject {
     public int framesCount = 0;
     public int loopsCount = 0;
 
-    public GIFObject(InputStream resourcetream, int framesCount) {
-        this.movie = Movie.decodeStream(resourcetream);
+    public GIFObject(InputStream resourceStream, int framesCount) {
+        this.movie = Movie.decodeStream(resourceStream);
         this.framesCount = framesCount;
     }
 }

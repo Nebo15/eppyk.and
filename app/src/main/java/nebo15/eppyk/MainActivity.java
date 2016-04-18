@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -28,6 +29,9 @@ import android.widget.Toast;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import nebo15.eppyk.gif.GIFObject;
 import nebo15.eppyk.gif.GIFView;
@@ -90,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
 
     // Dog & Hand
     GIFObject handGif;
-    GIFObject dogMoves[] = new GIFObject[3];
+    GIFObject dogMoves[] = new GIFObject[4];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -200,6 +204,8 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
         prepareAnimation();
         startAnimation();
 
+        startTimer();
+
     }
 
     @Override
@@ -239,13 +245,31 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
         manGifCatch.loopsCount = 1;
 
         // Really 42 frames but should be 50. Just because!
-        manGifDrop = new GIFObject(getResources().openRawResource(R.drawable.man_star_drop), 50);
+        manGifDrop = new GIFObject(getResources().openRawResource(R.drawable.man_star_drop), 42);
         manGifDrop.loopsCount = 1;
 
-        manMoves[0] = new GIFObject(getResources().openRawResource(R.drawable.man_move_1), 57);
-        manMoves[1] = new GIFObject(getResources().openRawResource(R.drawable.man_move_2), 46);
 
+        manMoves[0] = new GIFObject(getResources().openRawResource(R.drawable.man_move_1), 57);
+        manMoves[0].loopsCount = 1;
+
+        manMoves[1] = new GIFObject(getResources().openRawResource(R.drawable.man_move_2), 46);
+        manMoves[1].loopsCount = 1;
+
+        manMoves[2] = new GIFObject(getResources().openRawResource(R.drawable.man_move_3), 70);
+        manMoves[2].loopsCount = 1;
+
+        // Dog moves
         dogMoves[0] = new GIFObject(getResources().openRawResource(R.drawable.dog_move_1), 21);
+        dogMoves[0].loopsCount = 1;
+
+        dogMoves[1] = new GIFObject(getResources().openRawResource(R.drawable.dog_move_2), 24);
+        dogMoves[1].loopsCount = 1;
+
+        dogMoves[2] = new GIFObject(getResources().openRawResource(R.drawable.dog_move_3), 58);
+        dogMoves[2].loopsCount = 1;
+
+        dogMoves[3] = new GIFObject(getResources().openRawResource(R.drawable.dog_move_4), 88);
+        dogMoves[3].loopsCount = 1;
 
         handGif = new GIFObject(getResources().openRawResource(R.drawable.hand), 31);
     }
@@ -458,6 +482,7 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
 
     }
 
+    Boolean catching = false;
     public void gifAnimationDidFinish(GIFObject object) {
         if (object == starsGifBegin) {
             controlsUIAnimationShow();
@@ -467,6 +492,7 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
             // Man catch the star
             manImageView.setGif(manGifStar);
             manImageView.play();
+            catching = false;
         }
 
         if (object == manGifDrop) {
@@ -475,13 +501,21 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
             manImageView.play();
         }
 
+        if (manMoves[0] == object || manMoves[1] == object || manMoves[2] == object) {
+            manImageView.setGif(manGifStatic);
+            manImageView.play();
+        }
+
     }
 
     public void gifAnimationShowFrame(GIFObject object, int frameIndex) {
-        if (object == starsGifDrop && frameIndex == 11) {
+        if (object == starsGifDrop && frameIndex == 16) {
             // Man catch the star
             manImageView.setGif(manGifCatch);
             manImageView.play();
+            catching = true;
+            Log.i("EPPYK", "Catch star");
+
         }
 
     }
@@ -555,6 +589,7 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
             showAnswerTextAnimation.setFillAfter(true);
             showAnswerTextAnimation.setStartOffset(0);
             this.answerText.startAnimation(showAnswerTextAnimation);
+
         }
 
         if (animation == hideQuestionTextAnimation) {
@@ -676,22 +711,13 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
         EventManager.trackEvent("Language select show", null);
         UpdateManager.getInstance().loadL10ns();
 
+        // Show Frame
         FragmentManager fm = getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
 
-
         L10nFragment fragmentL10n = new L10nFragment();
         ft.add(R.id.l10nFragment, fragmentL10n).commit();
-
-//        if (fragmentL10n.isHidden()) {
-//            ft.show(fragmentL10n);
-//        } else {
-//            ft.hide(fragmentL10n);
-//        }
-//
-//        ft.commit();
-
     }
 
 
@@ -713,6 +739,63 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
     public void apiFail(String error) {
         Toast.makeText(this, error, Toast.LENGTH_LONG);
     }
+
+    /****
+     * Timers
+     ****/
+    // Timers
+    Timer dogTimer;
+    TimerTask dogTimerTask;
+    final Handler dogHandler = new Handler();
+
+    Timer manTimer;
+    TimerTask manTimerTask;
+    final Handler manHandler = new Handler();
+
+    public void startTimer() {
+        //set a new Timer
+        dogTimer = new Timer();
+        manTimer = new Timer();
+
+        initTimerTask();
+
+        dogTimer.schedule(dogTimerTask, 8000, 8000);
+        manTimer.schedule(manTimerTask, 5000, 5000);
+    }
+
+    public void initTimerTask() {
+
+        dogTimerTask = new TimerTask() {
+            public void run() {
+                dogHandler.post(new Runnable() {
+                    public void run() {
+                        if (new Random().nextInt(2) == 0) {
+                            dogImageView.setGif(dogMoves[new Random().nextInt(4)]);
+                            dogImageView.play();
+                        }
+                    }
+                });
+            }
+        };
+
+
+        manTimerTask = new TimerTask() {
+            public void run() {
+                manHandler.post(new Runnable() {
+                    public void run() {
+                        if (shakeAction != ShakeAction.ANSWER)
+                            return;
+
+                        if (new Random().nextInt(4) == 0 || true) {
+                            manImageView.setGif(manMoves[new Random().nextInt(3)]);
+                            manImageView.play();
+                        }
+                    }
+                });
+            }
+        };
+    }
+
 
 
 }
