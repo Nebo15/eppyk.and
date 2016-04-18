@@ -636,7 +636,7 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
 
     private void tryAgain() {
         this.tryAgainButton.setEnabled(false);
-        
+
         EventManager.trackEvent("Try again pressed", null);
         shakeAction = ShakeAction.NONE;
         ctrlQuestionEdit.setText("");
@@ -769,6 +769,7 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
                 dogHandler.post(new Runnable() {
                     public void run() {
                         if (new Random().nextInt(2) == 0) {
+                            Log.i("EPPYK", "Dog move");
                             dogImageView.setGif(dogMoves[new Random().nextInt(4)]);
                             dogImageView.play();
                         }
