@@ -786,7 +786,7 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
                         if (shakeAction != ShakeAction.ANSWER)
                             return;
 
-                        if (new Random().nextInt(4) == 0 || true) {
+                        if (new Random().nextInt(4) == 0) {
                             manImageView.setGif(manMoves[new Random().nextInt(3)]);
                             manImageView.play();
                         }
