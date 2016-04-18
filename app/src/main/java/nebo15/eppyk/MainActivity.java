@@ -482,7 +482,6 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
 
     }
 
-    Boolean catching = false;
     public void gifAnimationDidFinish(GIFObject object) {
         if (object == starsGifBegin) {
             controlsUIAnimationShow();
@@ -492,7 +491,6 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
             // Man catch the star
             manImageView.setGif(manGifStar);
             manImageView.play();
-            catching = false;
         }
 
         if (object == manGifDrop) {
@@ -513,9 +511,7 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
             // Man catch the star
             manImageView.setGif(manGifCatch);
             manImageView.play();
-            catching = true;
             Log.i("EPPYK", "Catch star");
-
         }
 
     }
@@ -637,7 +633,10 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
 
     }
 
+
     private void tryAgain() {
+        this.tryAgainButton.setEnabled(false);
+        
         EventManager.trackEvent("Try again pressed", null);
         shakeAction = ShakeAction.NONE;
         ctrlQuestionEdit.setText("");
@@ -786,7 +785,7 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
                         if (shakeAction != ShakeAction.ANSWER)
                             return;
 
-                        if (new Random().nextInt(4) == 0) {
+                        if (new Random().nextInt(3) == 0) {
                             manImageView.setGif(manMoves[new Random().nextInt(3)]);
                             manImageView.play();
                         }
