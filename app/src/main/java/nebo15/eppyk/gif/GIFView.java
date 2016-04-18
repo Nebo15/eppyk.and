@@ -138,8 +138,7 @@ public class GIFView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-    super.onDraw(canvas);
-        
+
         if (mGifObject != null && mGifObject.movie != null) {
             if (!mPaused) {
                 updateAnimationTime();

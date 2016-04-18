@@ -9,6 +9,7 @@ import android.graphics.Typeface;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -95,6 +96,10 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
     // Dog & Hand
     GIFObject handGif;
     GIFObject dogMoves[] = new GIFObject[4];
+
+    Handler dogHandler = null;
+    Handler manHandler = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -203,6 +208,9 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
 
         prepareAnimation();
         startAnimation();
+
+        dogHandler = new Handler(Looper.getMainLooper());
+        manHandler = new Handler(Looper.getMainLooper());
 
         startTimer();
 
@@ -745,11 +753,9 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
     // Timers
     Timer dogTimer;
     TimerTask dogTimerTask;
-    final Handler dogHandler = new Handler();
 
     Timer manTimer;
     TimerTask manTimerTask;
-    final Handler manHandler = new Handler();
 
     public void startTimer() {
         //set a new Timer
