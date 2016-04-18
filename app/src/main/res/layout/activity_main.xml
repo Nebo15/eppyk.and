@@ -141,6 +141,16 @@
         android:scaleType="fitStart"
         android:src="@mipmap/planet" />
 
+    <!-- DOG -->
+    <nebo15.eppyk.gif.GIFView
+        android:id="@+id/DogImageView"
+        android:layout_width="50dip"
+        android:layout_height="50dip"
+        android:layout_above="@+id/PlanetImageView"
+        android:layout_marginBottom="-12dip"
+        android:layout_marginLeft="30dip"
+        android:src="@drawable/dog_move_1" />
+
     <!-- MAN -->
     <nebo15.eppyk.gif.GIFView
         android:id="@+id/ManImageView"
@@ -148,19 +158,9 @@
         android:layout_height="180dip"
         android:layout_above="@+id/PlanetImageView"
         android:layout_marginBottom="-16dip"
-        android:layout_marginLeft="-10dip"
+        android:layout_marginLeft="-15dip"
         android:src="@drawable/man_static" />
 
-
-    <!-- DOG -->
-    <nebo15.eppyk.gif.GIFView
-        android:id="@+id/DogImageView"
-        android:layout_width="60dip"
-        android:layout_height="60dip"
-        android:layout_above="@+id/PlanetImageView"
-        android:layout_marginBottom="-12dip"
-        android:layout_marginLeft="30dip"
-        android:src="@drawable/dog_move_1" />
 
 
     <LinearLayout
