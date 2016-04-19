@@ -764,7 +764,7 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
 
         initTimerTask();
 
-        dogTimer.schedule(dogTimerTask, 8000, 8000);
+//        dogTimer.schedule(dogTimerTask, 8000, 8000);
         manTimer.schedule(manTimerTask, 5000, 5000);
     }
 
