@@ -6,17 +6,21 @@ import android.util.Log;
 import java.util.Random;
 
 import nebo15.eppyk.R;
+import nebo15.eppyk.data_api.EppykAnswer;
 
 /**
  * Created by anton on 17/04/16.
  */
 public class AnswerManager {
 
+    static private DBManager db;
+
     public enum AnswerSource {
         L10N, DB
     }
 
     static public String getAnswer(Context context) {
+        db = new DBManager(context);
         if (getSource() == AnswerSource.DB)
             return getDBAnswer();
         else
@@ -24,6 +28,9 @@ public class AnswerManager {
     }
 
     static private AnswerSource getSource() {
+        if (db.getAnswersCount() > 0)
+            return AnswerSource.DB;
+
         return AnswerSource.L10N;
     }
 
@@ -39,7 +46,8 @@ public class AnswerManager {
     }
 
     static private String getDBAnswer() {
-        return "DB is empty";
+        EppykAnswer answer = db.getRandomAnswer();
+        return answer.text;
     }
 
 }

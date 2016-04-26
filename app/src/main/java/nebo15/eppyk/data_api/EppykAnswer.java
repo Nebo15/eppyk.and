@@ -7,4 +7,14 @@ public class EppykAnswer {
 
     public String id;
     public String text;
+
+    public EppykAnswer() {
+        super();
+    }
+
+    public EppykAnswer(String id, String text) {
+        super();
+        this.id = id;
+        this.text = text;
+    }
 }

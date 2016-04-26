@@ -34,12 +34,14 @@ import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import nebo15.eppyk.data_api.EppykAnswer;
 import nebo15.eppyk.gif.GIFObject;
 import nebo15.eppyk.gif.GIFView;
 import nebo15.eppyk.gif.IGIFEvent;
 import nebo15.eppyk.listeners.EventManager;
 import nebo15.eppyk.listeners.ShakeEventListener;
 import nebo15.eppyk.managers.AnswerManager;
+import nebo15.eppyk.managers.DBManager;
 import nebo15.eppyk.managers.ImageManager;
 import nebo15.eppyk.managers.UpdateManager;
 
@@ -100,6 +102,8 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
     Handler dogHandler = null;
     Handler manHandler = null;
 
+    private DBManager db;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,6 +116,9 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
 
         // Networking
         UpdateManager.getInstance().callback = this;
+
+        // DB
+        this.db = new DBManager(this);
 
         // Fragment
 
@@ -740,6 +747,13 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
     @Override
     public void apiAnswersLoaded(List items) {
         Log.i("EPPYK", "Update answers");
+
+        this.db.deleteAllAnswers();
+        for (Object _answer : items) {
+            EppykAnswer answer = (EppykAnswer)_answer;
+            this.db.addAnswer(answer);
+        }
+
     }
 
     @Override
