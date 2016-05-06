@@ -6,13 +6,20 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
+
+import nebo15.eppyk.data_api.L10N;
 
 /**
  * Created by anton on 18/04/16.
  */
 public class L10nFragment extends Fragment {
+    public L10N[] data;
+
     Button doneButton;
+    ListView l10nList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,  Bundle savedInstanceState) {
@@ -31,6 +38,11 @@ public class L10nFragment extends Fragment {
             }
         });
 
+        this.l10nList = (ListView)v.findViewById(R.id.l10nList);
+
+        L10nAdapter adapter = new L10nAdapter(this.getActivity(), this.data);
+
+        this.l10nList.setAdapter(adapter);
 
 
 //        View tv = v.findViewById(R.id.msg);

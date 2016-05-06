@@ -28,6 +28,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
@@ -35,6 +36,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import nebo15.eppyk.data_api.EppykAnswer;
+import nebo15.eppyk.data_api.L10N;
 import nebo15.eppyk.gif.GIFObject;
 import nebo15.eppyk.gif.GIFView;
 import nebo15.eppyk.gif.IGIFEvent;
@@ -116,6 +118,7 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
 
         // Networking
         UpdateManager.getInstance().callback = this;
+        UpdateManager.getInstance().context = this;
 
         // DB
         this.db = new DBManager(this);
@@ -724,14 +727,6 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
     private void l10nViewRequest() {
         EventManager.trackEvent("Language select show", null);
         UpdateManager.getInstance().loadL10ns();
-
-        // Show Frame
-        FragmentManager fm = getFragmentManager();
-        FragmentTransaction ft = fm.beginTransaction();
-        ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
-
-        L10nFragment fragmentL10n = new L10nFragment();
-        ft.add(R.id.l10nFragment, fragmentL10n).commit();
     }
 
 
@@ -739,9 +734,19 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
      * API Callback
      ****/
     @Override
-    public void apiL10NsLoaded(List items) {
+    public void apiL10NsLoaded(List<L10N> items) {
         Log.i("EPPYK", "Show L10n view");
-        UpdateManager.getInstance().loadAnswers("ru_RU");
+
+        // Show Frame
+        FragmentManager fm = getFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
+
+        L10nFragment fragmentL10n = new L10nFragment();
+        fragmentL10n.data = items.toArray(new L10N[items.size()]);
+        ft.add(R.id.l10nFragment, fragmentL10n).commit();
+
+//        UpdateManager.getInstance().loadAnswers("ru_RU");
     }
 
     @Override
