@@ -634,6 +634,7 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
     /****
      * OnClick Listener
      ****/
+    boolean globeProcessing = false;
     @Override
     public void onClick(View v) {
         if (v == tryAgainButton) {
@@ -646,7 +647,8 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
         }
 
         if (v == globusButton) {
-            l10nViewRequest();
+            if (!globeProcessing)
+                l10nViewRequest();
         }
 
     }
@@ -726,6 +728,7 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
 
     private void l10nViewRequest() {
         EventManager.trackEvent("Language select show", null);
+        globeProcessing = true;
         UpdateManager.getInstance().loadL10ns();
     }
 
@@ -733,36 +736,42 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
     /****
      * API Callback
      ****/
+    L10nFragment fragmentL10n;
     @Override
     public void apiL10NsLoaded(List<L10N> items) {
         Log.i("EPPYK", "Show L10n view");
+        globeProcessing = false;
 
         // Show Frame
         FragmentManager fm = getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
 
-        L10nFragment fragmentL10n = new L10nFragment();
+        fragmentL10n = new L10nFragment();
         fragmentL10n.data = items.toArray(new L10N[items.size()]);
         ft.add(R.id.l10nFragment, fragmentL10n).commit();
-
-//        UpdateManager.getInstance().loadAnswers("ru_RU");
     }
 
     @Override
     public void apiAnswersLoaded(List items) {
         Log.i("EPPYK", "Update answers");
 
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
+
+        ft.remove(fragmentL10n);
+        ft.commit();
+
         this.db.deleteAllAnswers();
         for (Object _answer : items) {
             EppykAnswer answer = (EppykAnswer)_answer;
             this.db.addAnswer(answer);
         }
-
     }
 
     @Override
     public void apiFail(String error) {
+        globeProcessing = false;
         Toast.makeText(this, error, Toast.LENGTH_LONG);
     }
 
@@ -783,7 +792,7 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
 
         initTimerTask();
 
-//        dogTimer.schedule(dogTimerTask, 8000, 8000);
+        dogTimer.schedule(dogTimerTask, 8000, 8000);
         manTimer.schedule(manTimerTask, 5000, 5000);
     }
 

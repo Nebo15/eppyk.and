@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import nebo15.eppyk.data_api.L10N;
+import nebo15.eppyk.managers.UpdateManager;
 
 /**
  * Created by anton on 18/04/16.
@@ -20,6 +21,7 @@ public class L10nFragment extends Fragment {
 
     Button doneButton;
     ListView l10nList;
+    L10nAdapter adapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,  Bundle savedInstanceState) {
@@ -30,29 +32,14 @@ public class L10nFragment extends Fragment {
         this.doneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentTransaction ft = getFragmentManager().beginTransaction();
-                ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
-
-                ft.remove(L10nFragment.this);
-                ft.commit();
+                UpdateManager.getInstance().loadAnswers(adapter.selectedCode);
             }
         });
 
         this.l10nList = (ListView)v.findViewById(R.id.l10nList);
-
-        L10nAdapter adapter = new L10nAdapter(this.getActivity(), this.data);
-
+        String currentL10n = UpdateManager.getInstance().getCurrentL10N();
+        adapter = new L10nAdapter(this.getActivity(), this.data, currentL10n);
         this.l10nList.setAdapter(adapter);
-
-
-//        View tv = v.findViewById(R.id.msg);
-//        ((TextView)tv).setText("The fragment saves and restores this text.");
-//
-//        // Retrieve the text editor, and restore the last saved state if needed.
-//        mTextView = (TextView)v.findViewById(R.id.saved);
-//        if (savedInstanceState != null) {
-//            mTextView.setText(savedInstanceState.getCharSequence("text"));
-//        }
 
         return v;
     }
