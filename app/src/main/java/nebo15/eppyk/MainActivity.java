@@ -762,11 +762,6 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
         ft.remove(fragmentL10n);
         ft.commit();
 
-        this.db.deleteAllAnswers();
-        for (Object _answer : items) {
-            EppykAnswer answer = (EppykAnswer)_answer;
-            this.db.addAnswer(answer);
-        }
     }
 
     @Override

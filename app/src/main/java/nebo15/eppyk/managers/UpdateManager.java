@@ -11,9 +11,11 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 import nebo15.eppyk.data_api.EppykAPI;
+import nebo15.eppyk.data_api.EppykAnswer;
 import nebo15.eppyk.data_api.EppykL10Ns;
 import nebo15.eppyk.data_api.EppykL10nAnswers;
 import nebo15.eppyk.data_api.L10N;
+import nebo15.eppyk.data_api.Meta;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -94,9 +96,21 @@ public class UpdateManager implements Callback {
                 callback.apiL10NsLoaded(items);
         } else if (response.body() instanceof EppykL10nAnswers) {
             UpdateManager.getInstance().setLastUpdateDate(new Date());
+
+            DBManager db = new DBManager(context);
+            List answers = ((EppykL10nAnswers)response.body()).data;
+            Meta meta = ((EppykL10nAnswers)response.body()).meta;
+
+            if (!meta.isAppend() || (!lastLoadedL10n.equalsIgnoreCase(getCurrentL10N())) )
+                db.deleteAllAnswers();
+
+            for (Object _answer : answers) {
+                EppykAnswer answer = (EppykAnswer)_answer;
+                db.addAnswer(answer);
+            }
+
             setCurrentL10N(lastLoadedL10n);
 
-            List answers = ((EppykL10nAnswers)response.body()).data;
             if (callback != null)
                 callback.apiAnswersLoaded(answers);
         }
