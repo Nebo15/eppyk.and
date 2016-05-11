@@ -53,7 +53,6 @@
         android:layout_marginTop="-110dip"
         android:hint="@string/ask_it_here"
         android:lines="1"
-        android:text="Some user question"
         android:textAlignment="center"
         android:textColor="@color/textColor"
         android:textColorHint="@color/hintColor"
@@ -178,6 +177,7 @@
             android:layout_weight="1"
             android:alpha="0"
             android:enabled="false"
+            android:textSize="12dp"
             android:text="@string/button_save_answer"
             android:textAllCaps="false" />
 
@@ -190,6 +190,7 @@
             android:layout_weight="1"
             android:alpha="0"
             android:enabled="false"
+            android:textSize="12dp"
             android:text="@string/button_try_again"
             android:textAllCaps="false" />
 
