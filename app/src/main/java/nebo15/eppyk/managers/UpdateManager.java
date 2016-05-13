@@ -65,8 +65,6 @@ public class UpdateManager implements Callback {
         Call<EppykL10Ns> call = eppykAPI.loadL10ns();
         //asynchronous call
         call.enqueue(this);
-
-
     }
 
     private String lastLoadedL10n;
@@ -101,7 +99,7 @@ public class UpdateManager implements Callback {
             List answers = ((EppykL10nAnswers)response.body()).data;
             Meta meta = ((EppykL10nAnswers)response.body()).meta;
 
-            if (!meta.isAppend() || (!lastLoadedL10n.equalsIgnoreCase(getCurrentL10N())) )
+            if (meta.getAppend() == 1 || (!lastLoadedL10n.equalsIgnoreCase(getCurrentL10N())) )
                 db.deleteAllAnswers();
 
             for (Object _answer : answers) {

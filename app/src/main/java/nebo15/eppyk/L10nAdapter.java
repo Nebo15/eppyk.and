@@ -69,8 +69,8 @@ public class L10nAdapter extends BaseAdapter {
             holder.checked.setVisibility(View.VISIBLE);
         else
             holder.checked.setVisibility(View.GONE);
-        holder.name.setText("English");
-        holder.description.setText(String.format("Answers from %s", data[position].title));
+        holder.name.setText(data[position].title);
+        holder.description.setText(data[position].description);
         rowView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {

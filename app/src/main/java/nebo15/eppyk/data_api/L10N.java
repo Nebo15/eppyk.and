@@ -7,9 +7,14 @@ public class L10N {
     public String id;
     public String code;
     public String title;
+    public String description;
+
 
     @Override
     public String toString() {
-        return(title);
+        return "L10N{" +
+                "title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                '}';
     }
 }

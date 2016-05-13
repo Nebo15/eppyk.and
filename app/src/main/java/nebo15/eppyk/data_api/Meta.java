@@ -5,13 +5,13 @@ package nebo15.eppyk.data_api;
  */
 public class Meta {
     private int code;
-    private boolean append;
+    private int append;
 
     public int getCode() {
         return code;
     }
 
-    public boolean isAppend() {
+    public int getAppend() {
         return append;
     }
 }

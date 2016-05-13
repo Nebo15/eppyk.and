@@ -19,6 +19,7 @@ public class DBManager extends SQLiteOpenHelper {
     public static final String ANSWERS_TABLE_NAME = "answers";
     public static final String ANSWERS_COLUMN_ID = "id";
     public static final String ANSWERS_COLUMN_VALUE = "value";
+    public static final String ANSWERS_COLUMN_AUTHOR = "author";
 
 
     public DBManager(Context context) {
@@ -27,7 +28,7 @@ public class DBManager extends SQLiteOpenHelper {
 
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(
-                String.format("CREATE TABLE %s (%s text primary key, %s text)", ANSWERS_TABLE_NAME, ANSWERS_COLUMN_ID, ANSWERS_COLUMN_VALUE)
+                String.format("CREATE TABLE %s (%s text primary key, %s text, %s text)", ANSWERS_TABLE_NAME, ANSWERS_COLUMN_ID, ANSWERS_COLUMN_VALUE, ANSWERS_COLUMN_AUTHOR)
         );
     }
 
@@ -41,12 +42,13 @@ public class DBManager extends SQLiteOpenHelper {
         ContentValues contentValues = new ContentValues();
         contentValues.put(ANSWERS_COLUMN_ID, answer.id);
         contentValues.put(ANSWERS_COLUMN_VALUE, answer.text);
+        contentValues.put(ANSWERS_COLUMN_AUTHOR, answer.author);
 
         return db.insert(ANSWERS_TABLE_NAME, null, contentValues) != -1;
     }
 
     public int getAnswersCount() {
-        String countQuery = String.format("SELECT  * FROM %s", ANSWERS_TABLE_NAME);
+        String countQuery = String.format("SELECT * FROM %s", ANSWERS_TABLE_NAME);
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(countQuery, null);
         int cnt = cursor.getCount();
@@ -57,10 +59,11 @@ public class DBManager extends SQLiteOpenHelper {
     public EppykAnswer getAnswer(String id) {
         EppykAnswer answer = null;
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery( String.format("SELECT * FEOM %s WHERE id='%s'", ANSWERS_TABLE_NAME, id), null);
+        Cursor res =  db.rawQuery( String.format("SELECT * FROM %s WHERE id='%s'", ANSWERS_TABLE_NAME, id), null);
         if (res.moveToFirst()) {
             String text = res.getString(1);
-            answer = new EppykAnswer(id, text);
+            String author = res.getString(2);
+            answer = new EppykAnswer(id, text, author);
         }
         return answer;
     }
@@ -72,7 +75,8 @@ public class DBManager extends SQLiteOpenHelper {
         if (res.moveToFirst()) {
             String id = res.getString(0);
             String text = res.getString(1);
-            answer = new EppykAnswer(id, text);
+            String author = res.getString(1);
+            answer = new EppykAnswer(id, text, author);
         }
         return answer;
     }

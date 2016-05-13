@@ -5,7 +5,7 @@
     <color name="colorAccent">#CFCFCF</color>
     <color name="textColor">#FFFFFF</color>
     <color name="hintColor">#CFCFCF</color>
-    <color name="l10n_fragment_background">#000000</color>
+    <color name="l10n_fragment_background">#224479</color>
 
     <color name="saveButtonBackgroundColor">#ABFE5E</color>
     <color name="saveButtonTextColor">#224479</color>

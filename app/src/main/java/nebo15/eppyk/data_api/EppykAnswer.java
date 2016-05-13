@@ -7,14 +7,16 @@ public class EppykAnswer {
 
     public String id;
     public String text;
+    public String author;
 
     public EppykAnswer() {
         super();
     }
 
-    public EppykAnswer(String id, String text) {
+    public EppykAnswer(String id, String text, String author) {
         super();
         this.id = id;
         this.text = text;
+        this.author = author;
     }
 }
