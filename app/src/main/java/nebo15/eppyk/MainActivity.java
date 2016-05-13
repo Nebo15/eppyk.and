@@ -805,19 +805,12 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
     @Override
     public void apiAnswersLoaded(List items) {
         Log.i("EPPYK", "Update answers");
-
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
-
-        ft.remove(fragmentL10n);
-        ft.commit();
-
     }
 
     @Override
     public void apiFail(String error) {
         globeProcessing = false;
-        Toast.makeText(this, error, Toast.LENGTH_LONG);
+        Toast.makeText(this, error, Toast.LENGTH_LONG).show();
     }
 
     /****

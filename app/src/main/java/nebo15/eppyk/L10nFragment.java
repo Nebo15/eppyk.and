@@ -33,6 +33,15 @@ public class L10nFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 UpdateManager.getInstance().loadAnswers(adapter.selectedCode);
+
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
+
+                ft.remove(L10nFragment.this);
+                ft.commit();
+
+
+
             }
         });
 
