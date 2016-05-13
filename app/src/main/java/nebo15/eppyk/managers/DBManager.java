@@ -14,7 +14,7 @@ import nebo15.eppyk.data_api.EppykAnswer;
 public class DBManager extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "EPPYK.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     public static final String ANSWERS_TABLE_NAME = "answers";
     public static final String ANSWERS_COLUMN_ID = "id";
@@ -75,7 +75,7 @@ public class DBManager extends SQLiteOpenHelper {
         if (res.moveToFirst()) {
             String id = res.getString(0);
             String text = res.getString(1);
-            String author = res.getString(1);
+            String author = res.getString(2);
             answer = new EppykAnswer(id, text, author);
         }
         return answer;

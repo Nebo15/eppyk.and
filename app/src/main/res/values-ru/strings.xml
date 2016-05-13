@@ -20,5 +20,12 @@
     <string name="answer_6">У меня ответы закончились</string>
 
 
+    <string name="author_0">Деньги, Карты, Два ствола</string> <!-- each author has name "author_N", where N - number [0, pre-installed authore count)  -->
+    <string name="author_1">Деньги, Карты, Два ствола</string>
+    <string name="author_2">Деньги, Карты, Два ствола</string>
+    <string name="author_3">Снэтч</string>
+    <string name="author_4">Деньги, Карты, Два ствола</string>
+    <string name="author_5">Автор</string>
+    <string name="author_6">Криминальное чтиво</string>
 
 </resources>

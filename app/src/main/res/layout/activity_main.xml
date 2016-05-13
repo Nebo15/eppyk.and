@@ -115,7 +115,6 @@
         android:textSize="30dp"
         android:visibility="gone" />
 
-
     <!-- LOGO -->
     <ImageView
         android:id="@+id/LogoImageView"
@@ -163,6 +162,7 @@
 
 
     <LinearLayout
+        android:id="@+id/Buttonslayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -195,6 +195,23 @@
             android:textAllCaps="false" />
 
     </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/AuthorText"
+        android:layout_above="@id/Buttonslayout"
+        android:layout_width="140dip"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dip"
+        android:layout_marginBottom="20dip"
+        android:maxLines="8"
+        android:textAlignment="textEnd"
+        android:textColor="@color/textColor"
+        android:textSize="9dp"
+        android:text="@string/and_shake"
+        android:visibility="gone"
+        />
 
 
     <ImageButton

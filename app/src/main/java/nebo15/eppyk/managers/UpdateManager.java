@@ -2,6 +2,7 @@ package nebo15.eppyk.managers;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -65,6 +66,7 @@ public class UpdateManager implements Callback {
         Call<EppykL10Ns> call = eppykAPI.loadL10ns();
         //asynchronous call
         call.enqueue(this);
+        Log.i("NETWORK", "Run EppykL10Ns");
     }
 
     private String lastLoadedL10n;
@@ -82,6 +84,7 @@ public class UpdateManager implements Callback {
         lastLoadedL10n = l10n;
         //asynchronous call
         call.enqueue(this);
+        Log.i("NETWORK", "Run EppykL10nAnswers");
     }
 
 
@@ -89,10 +92,12 @@ public class UpdateManager implements Callback {
     public void onResponse(Call call, Response response) {
 
         if (response.body() instanceof EppykL10Ns) {
+            Log.i("NETWORK", "Done EppykL10Ns");
             List<L10N> items = ((EppykL10Ns)response.body()).data;
             if (callback != null)
                 callback.apiL10NsLoaded(items);
         } else if (response.body() instanceof EppykL10nAnswers) {
+            Log.i("NETWORK", "Done EppykL10nAnswers");
             UpdateManager.getInstance().setLastUpdateDate(new Date());
 
             DBManager db = new DBManager(context);
@@ -104,7 +109,7 @@ public class UpdateManager implements Callback {
 
             for (Object _answer : answers) {
                 EppykAnswer answer = (EppykAnswer)_answer;
-                db.addAnswer(answer);
+                boolean success = db.addAnswer(answer);
             }
 
             setCurrentL10N(lastLoadedL10n);
@@ -116,8 +121,10 @@ public class UpdateManager implements Callback {
 
     @Override
     public void onFailure(Call call, Throwable t) {
+        String message = (t.getLocalizedMessage() == null) ? "Network error" : t.getLocalizedMessage();
+        Log.w("NETWORK", message);
         if (callback != null)
-            callback.apiFail(t.getLocalizedMessage());
+            callback.apiFail(message);
     }
 
 
@@ -133,6 +140,20 @@ public class UpdateManager implements Callback {
     public String getCurrentL10N() {
         SharedPreferences settings = context.getSharedPreferences("EPPYK", 0);
         return settings.getString("CURR_L10N", "");
+    }
+
+    public void setFirstStart(boolean first) {
+        SharedPreferences settings = context.getSharedPreferences("EPPYK", 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putBoolean("FIRST_START", first);
+
+        // Commit the edits!
+        editor.commit();
+    }
+
+    public boolean isFirstStart() {
+        SharedPreferences settings = context.getSharedPreferences("EPPYK", 0);
+        return settings.getBoolean("FIRST_START", true);
     }
 
     public void setLastUpdateDate(Date date) {

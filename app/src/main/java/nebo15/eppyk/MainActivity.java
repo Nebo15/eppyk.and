@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
     TextView ctrlShakeText;
     EditText questionText;
     TextView answerText;
+    TextView authorText;
     View whiteView;
 
 
@@ -203,6 +204,9 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
         this.answerText = (TextView) findViewById(R.id.AnswerText);
         this.answerText.setTypeface(fontGeneralBold);
 
+        this.authorText = (TextView) findViewById(R.id.AuthorText);
+        this.authorText.setTypeface(fontGeneralBold);
+
         this.saveButton = (Button) findViewById(R.id.SaveButton);
         this.saveButton.setTypeface(fontGeneralBold);
         this.saveButton.setOnClickListener(this);
@@ -232,6 +236,15 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
         mSensorManager.registerListener(mSensorListener,
                 mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
                 SensorManager.SENSOR_DELAY_UI);
+
+
+
+        // Show L10n select view on first start
+        if (UpdateManager.getInstance().isFirstStart()) {
+            l10nViewRequest();
+            UpdateManager.getInstance().setFirstStart(false);
+        }
+
     }
 
     @Override
@@ -432,7 +445,8 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
     /****
      * Actions
      ****/
-    Animation showQuestionTextAnimation, hideQuestionTextAnimation, showAnswerTextAnimation, hideAnswerTextAnimation, hideAnswerTryAgainTextAnimation;
+    Animation showQuestionTextAnimation, hideQuestionTextAnimation, showAnswerTextAnimation, hideAnswerTextAnimation,
+            hideAnswerTryAgainTextAnimation, showAuthorTextAnimation, hideAuthorTextAnimation;
 
     public void showAnswer() {
 
@@ -444,7 +458,10 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
             shakeAction = ShakeAction.NONE;
 
             this.questionText.setText(this.ctrlQuestionEdit.getText());
-            this.answerText.setText(AnswerManager.getAnswer(this));
+
+            String[] answer = AnswerManager.getAnswer(this);
+            this.answerText.setText(answer[0]);
+            this.authorText.setText(answer[1]);
 
             // Hide keyboard
             View view = this.getCurrentFocus();
@@ -471,6 +488,11 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
             showAnswerTextAnimation.setFillAfter(true);
             this.answerText.startAnimation(showAnswerTextAnimation);
 
+            showAuthorTextAnimation = AnimationUtils.loadAnimation(this, R.anim.show_author_text_animation);
+            showAuthorTextAnimation.setAnimationListener(this);
+            showAuthorTextAnimation.setFillAfter(true);
+            this.authorText.startAnimation(showAuthorTextAnimation);
+
             // Show buttons
             showButtons();
         }
@@ -481,6 +503,11 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
             hideAnswerTryAgainTextAnimation.setAnimationListener(this);
             hideAnswerTryAgainTextAnimation.setFillAfter(true);
             this.answerText.startAnimation(hideAnswerTryAgainTextAnimation);
+
+            hideAuthorTextAnimation = AnimationUtils.loadAnimation(this, R.anim.hide_author_text_animation);
+            hideAuthorTextAnimation.setAnimationListener(this);
+            hideAuthorTextAnimation.setFillAfter(true);
+            this.authorText.startAnimation(hideAuthorTextAnimation);
         }
     }
 
@@ -561,6 +588,10 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
             this.answerText.setVisibility(View.VISIBLE);
         }
 
+        if (animation == showAuthorTextAnimation) {
+            this.authorText.setVisibility(View.VISIBLE);
+        }
+
         if (animation == showLeftButtonAnimation) {
             this.saveButton.setAlpha(1);
             this.saveButton.setEnabled(true);
@@ -596,13 +627,21 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
         if (animation == hideAnswerTryAgainTextAnimation) {
             this.answerText.setVisibility(View.GONE);
 
-            this.answerText.setText(AnswerManager.getAnswer(this));
+            String[] answer = AnswerManager.getAnswer(this);
+            this.answerText.setText(answer[0]);
+            this.authorText.setText(answer[1]);
 
             showAnswerTextAnimation = AnimationUtils.loadAnimation(this, R.anim.show_answer_text_animation);
             showAnswerTextAnimation.setAnimationListener(this);
             showAnswerTextAnimation.setFillAfter(true);
             showAnswerTextAnimation.setStartOffset(0);
             this.answerText.startAnimation(showAnswerTextAnimation);
+
+            showAuthorTextAnimation = AnimationUtils.loadAnimation(this, R.anim.show_author_text_animation);
+            showAuthorTextAnimation.setAnimationListener(this);
+            showAuthorTextAnimation.setFillAfter(true);
+            showAuthorTextAnimation.setStartOffset(0);
+            this.authorText.startAnimation(showAuthorTextAnimation);
 
         }
 
@@ -666,6 +705,11 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
         hideAnswerTextAnimation.setAnimationListener(this);
         hideAnswerTextAnimation.setFillAfter(true);
         this.answerText.startAnimation(hideAnswerTextAnimation);
+
+        hideAuthorTextAnimation = AnimationUtils.loadAnimation(this, R.anim.hide_author_text_animation);
+        hideAuthorTextAnimation.setAnimationListener(this);
+        hideAuthorTextAnimation.setFillAfter(true);
+        this.authorText.startAnimation(hideAuthorTextAnimation);
 
         hideQuestionTextAnimation = AnimationUtils.loadAnimation(this, R.anim.hide_question_text_animation);
         hideQuestionTextAnimation.setAnimationListener(this);
@@ -741,6 +785,12 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
     public void apiL10NsLoaded(List<L10N> items) {
         Log.i("EPPYK", "Show L10n view");
         globeProcessing = false;
+
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
 
         // Show Frame
         FragmentManager fm = getFragmentManager();

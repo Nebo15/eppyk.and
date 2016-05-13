@@ -22,5 +22,12 @@
     <string name="answer_4">Yes, you should do it right now</string>
 
 
+    <string name="author_0">William Shakespeare</string> <!-- each author has name "author_N", where N - number [0, pre-installed authore count)  -->
+    <string name="author_1">Folk song, England (1900)</string>
+    <string name="author_2">William Shakespeare, Hamlet (1590)</string>
+    <string name="author_3">William Shakespeare, Hamlet (1590)</string>
+    <string name="author_4">William Shakespeare, Hamlet</string>
+
+
 
 </resources>
