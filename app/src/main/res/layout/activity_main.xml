@@ -54,6 +54,8 @@
         android:hint="@string/ask_it_here"
         android:lines="1"
         android:textAlignment="center"
+        android:ellipsize="end"
+        android:singleLine="true"
         android:textColor="@color/textColor"
         android:textColorHint="@color/hintColor"
         android:textSize="16dp"
@@ -98,6 +100,8 @@
         android:maxWidth="200dip"
         android:textColor="@color/textColor"
         android:textSize="14dp"
+        android:maxLines="4"
+        android:ellipsize="end"
         android:visibility="gone" />
 
 
