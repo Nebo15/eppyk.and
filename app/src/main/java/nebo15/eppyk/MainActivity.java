@@ -735,8 +735,6 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
         showShakeHintAnimation.setStartOffset(1000);
         this.shakeAgainHint.startAnimation(showShakeHintAnimation);
 
-
-
         hideQuestionTextAnimation = AnimationUtils.loadAnimation(this, R.anim.hide_question_text_animation);
         hideQuestionTextAnimation.setAnimationListener(this);
         hideQuestionTextAnimation.setFillAfter(true);
@@ -778,12 +776,14 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
                 saveButton.setAlpha(0f);
                 tryAgainButton.setAlpha(0f);
                 globusButton.setAlpha(0f);
+                shakeAgainHint.setAlpha(0f);
 
                 Bitmap screenshot = ImageManager.getScreenShot(rootView, MainActivity.this);
 
                 saveButton.setAlpha(1.0f);
                 tryAgainButton.setAlpha(1.0f);
                 globusButton.setAlpha(1.0f);
+                shakeAgainHint.setAlpha(1.0f);
 
                 ImageManager.insertImage(getContentResolver(), screenshot, filename, "");
             }
