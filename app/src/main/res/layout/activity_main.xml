@@ -51,11 +51,11 @@
         android:layout_marginLeft="45dip"
         android:layout_marginRight="45dip"
         android:layout_marginTop="-110dip"
+        android:ellipsize="end"
         android:hint="@string/ask_it_here"
         android:lines="1"
-        android:textAlignment="center"
-        android:ellipsize="end"
         android:singleLine="true"
+        android:textAlignment="center"
         android:textColor="@color/textColor"
         android:textColorHint="@color/hintColor"
         android:textSize="16dp"
@@ -94,14 +94,14 @@
         android:layout_alignParentTop="true"
         android:layout_marginLeft="15dip"
         android:layout_marginTop="100dip"
+        android:ellipsize="end"
         android:enabled="false"
         android:focusable="false"
         android:maxHeight="70dip"
+        android:maxLines="4"
         android:maxWidth="200dip"
         android:textColor="@color/textColor"
         android:textSize="14dp"
-        android:maxLines="4"
-        android:ellipsize="end"
         android:visibility="gone" />
 
 
@@ -164,58 +164,112 @@
         android:src="@drawable/man_static" />
 
 
-
     <LinearLayout
         android:id="@+id/Buttonslayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="25dip">
+        android:orientation="vertical">
 
-        <Button
-            android:id="@+id/SaveButton"
-            style="@style/SaveButton"
-            android:layout_width="100dip"
+        <LinearLayout
+            android:id="@+id/ButtonslayoutInner"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dip"
-            android:layout_weight="1"
-            android:alpha="0"
-            android:enabled="false"
-            android:textSize="12dp"
-            android:text="@string/button_save_answer"
-            android:textAllCaps="false" />
+            android:layout_marginBottom="0dip"
+            android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/TryAgainButton"
-            style="@style/TryAgainButton"
-            android:layout_width="100dip"
+            <Button
+                android:id="@+id/SaveButton"
+                style="@style/SaveButton"
+                android:layout_width="100dip"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dip"
+                android:layout_marginLeft="5dip"
+                android:layout_marginRight="5dip"
+                android:layout_weight="1"
+                android:alpha="0"
+                android:enabled="false"
+                android:text="@string/button_save_answer"
+                android:textAllCaps="false"
+                android:textSize="12dp" />
+
+            <Button
+                android:id="@+id/TryAgainButton"
+                style="@style/TryAgainButton"
+                android:layout_width="100dip"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dip"
+                android:layout_marginLeft="5dip"
+                android:layout_marginRight="5dip"
+                android:layout_weight="1"
+                android:alpha="0"
+                android:enabled="false"
+                android:text="@string/button_try_again"
+                android:textAllCaps="false"
+                android:textSize="12dp" />
+
+        </LinearLayout>
+
+
+        <!-- Shake again hint -->
+        <RelativeLayout
+            android:id="@+id/ShakeAgainHint"
+            android:layout_marginTop="0dip"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dip"
-            android:layout_weight="1"
-            android:alpha="0"
-            android:enabled="false"
-            android:textSize="12dp"
-            android:text="@string/button_try_again"
-            android:textAllCaps="false" />
+            android:visibility="gone"
+            >
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shake_bg"
+                android:layout_alignTop="@+id/actual_content"
+                android:layout_alignBottom="@id/actual_content"
+                android:layout_alignLeft="@id/actual_content"
+                android:layout_alignRight="@id/actual_content"
+                />
+
+            <LinearLayout
+                android:id="@id/actual_content"
+                android:layout_width="match_parent"
+                android:layout_height="30dip"
+                android:layout_centerVertical="true"
+                >
+
+                <TextView
+                    android:id="@+id/ShakeHint"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:maxLines="1"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="IF YOU DON'T LIKE THE ANSWER SHAKE IT AGAIN"
+                    android:textAlignment="center"
+                    android:textStyle="bold"
+                    android:textColor="@color/l10n_fragment_background"
+                    android:textSize="11dp" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
 
     </LinearLayout>
 
 
     <TextView
         android:id="@+id/AuthorText"
-        android:layout_above="@id/Buttonslayout"
         android:layout_width="140dip"
         android:layout_height="wrap_content"
+        android:layout_above="@id/Buttonslayout"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="10dip"
         android:layout_marginBottom="20dip"
+        android:layout_marginRight="10dip"
         android:maxLines="8"
-        android:textAlignment="textEnd"
+        android:text="@string/and_shake"
         android:textColor="@color/textColor"
         android:textSize="9dp"
-        android:text="@string/and_shake"
-        android:visibility="gone"
-        />
+        android:visibility="gone" />
 
 
     <ImageButton
@@ -235,14 +289,11 @@
         android:visibility="gone" />
 
 
-
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/l10nFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:alpha="0.95"
-        />
-
+        android:alpha="0.95" />
 
 
 </RelativeLayout>

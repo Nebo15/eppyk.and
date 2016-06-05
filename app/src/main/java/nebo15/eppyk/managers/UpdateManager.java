@@ -56,7 +56,7 @@ public class UpdateManager implements Callback {
 
     public void loadL10ns() {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://128.199.50.95/")
+                .baseUrl("http://api.eppyk.com/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -72,7 +72,7 @@ public class UpdateManager implements Callback {
     private String lastLoadedL10n;
     public void loadAnswers(String l10n) {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://128.199.50.95/")
+                .baseUrl("http://api.eppyk.com/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 

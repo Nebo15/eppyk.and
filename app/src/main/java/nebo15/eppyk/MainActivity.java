@@ -25,6 +25,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -75,6 +76,7 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
     ImageButton globusButton;
     Button saveButton;
     Button tryAgainButton;
+    RelativeLayout shakeAgainHint;
 
     // UI Ainmations
     ImageView planetImageView;
@@ -215,6 +217,9 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
         this.tryAgainButton.setTypeface(fontGeneralBold);
         this.tryAgainButton.setOnClickListener(this);
 
+        this.shakeAgainHint = (RelativeLayout) findViewById(R.id.ShakeAgainHint);
+        ((TextView)findViewById(R.id.ShakeHint)).setTypeface(fontGeneralBold);
+
         this.whiteView = (View) findViewById(R.id.WhiteView);
 
         this.globusButton = (ImageButton) findViewById(R.id.GlobusButton);
@@ -241,7 +246,7 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
 
         // Show L10n select view on first start
         if (UpdateManager.getInstance().isFirstStart()) {
-            l10nViewRequest();
+            l10nViewRequest(true);
             UpdateManager.getInstance().setFirstStart(false);
         }
 
@@ -446,7 +451,7 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
      * Actions
      ****/
     Animation showQuestionTextAnimation, hideQuestionTextAnimation, showAnswerTextAnimation, hideAnswerTextAnimation,
-            hideAnswerTryAgainTextAnimation, showAuthorTextAnimation, hideAuthorTextAnimation;
+            hideAnswerTryAgainTextAnimation, showAuthorTextAnimation, hideAuthorTextAnimation, showShakeHintAnimation, hideShakeHintAnimation;
 
     public void showAnswer() {
 
@@ -492,6 +497,11 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
             showAuthorTextAnimation.setAnimationListener(this);
             showAuthorTextAnimation.setFillAfter(true);
             this.authorText.startAnimation(showAuthorTextAnimation);
+
+            showShakeHintAnimation = AnimationUtils.loadAnimation(this, R.anim.show_author_text_animation);
+            showShakeHintAnimation.setAnimationListener(this);
+            showShakeHintAnimation.setFillAfter(true);
+            this.shakeAgainHint.startAnimation(showShakeHintAnimation);
 
             // Show buttons
             showButtons();
@@ -592,6 +602,14 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
             this.authorText.setVisibility(View.VISIBLE);
         }
 
+        if (animation == showShakeHintAnimation) {
+            this.shakeAgainHint.setVisibility(View.VISIBLE);
+        }
+
+        if (animation == hideShakeHintAnimation) {
+            this.shakeAgainHint.setVisibility(View.GONE);
+        }
+
         if (animation == showLeftButtonAnimation) {
             this.saveButton.setAlpha(1);
             this.saveButton.setEnabled(true);
@@ -687,7 +705,7 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
 
         if (v == globusButton) {
             if (!globeProcessing)
-                l10nViewRequest();
+                l10nViewRequest(false);
         }
 
     }
@@ -710,6 +728,14 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
         hideAuthorTextAnimation.setAnimationListener(this);
         hideAuthorTextAnimation.setFillAfter(true);
         this.authorText.startAnimation(hideAuthorTextAnimation);
+
+        showShakeHintAnimation = AnimationUtils.loadAnimation(this, R.anim.hide_author_text_animation);
+        showShakeHintAnimation.setAnimationListener(this);
+        showShakeHintAnimation.setFillAfter(true);
+        showShakeHintAnimation.setStartOffset(1000);
+        this.shakeAgainHint.startAnimation(showShakeHintAnimation);
+
+
 
         hideQuestionTextAnimation = AnimationUtils.loadAnimation(this, R.anim.hide_question_text_animation);
         hideQuestionTextAnimation.setAnimationListener(this);
@@ -770,8 +796,10 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
         whiteView.startAnimation(fade);
     }
 
-    private void l10nViewRequest() {
+    boolean onFirstLoad;
+    private void l10nViewRequest(boolean onFirstLoad) {
         EventManager.trackEvent("Language select show", null);
+        this.onFirstLoad = onFirstLoad;
         globeProcessing = true;
         UpdateManager.getInstance().loadL10ns();
     }
@@ -785,6 +813,14 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
     public void apiL10NsLoaded(List<L10N> items) {
         Log.i("EPPYK", "Show L10n view");
         globeProcessing = false;
+
+        if (items.size() == 1 && this.onFirstLoad) {
+            this.onFirstLoad = false;
+            UpdateManager.getInstance().loadAnswers(items.get(0).code);
+            return;
+        }
+
+        this.onFirstLoad = false;
 
         View view = this.getCurrentFocus();
         if (view != null) {
