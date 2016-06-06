@@ -801,6 +801,17 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
         EventManager.trackEvent("Language select show", null);
         this.onFirstLoad = onFirstLoad;
         globeProcessing = true;
+
+        Handler mainHandler = new Handler(this.getMainLooper());
+        Runnable myRunnable = new Runnable() {
+            @Override
+            public void run() {
+                globusButton.setImageResource(R.mipmap.loading);
+            }
+        };
+        mainHandler.post(myRunnable);
+
+
         UpdateManager.getInstance().loadL10ns();
     }
 
@@ -813,6 +824,15 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
     public void apiL10NsLoaded(List<L10N> items) {
         Log.i("EPPYK", "Show L10n view");
         globeProcessing = false;
+        Handler mainHandler = new Handler(this.getMainLooper());
+        Runnable myRunnable = new Runnable() {
+            @Override
+            public void run() {
+                globusButton.setImageResource(R.mipmap.globe);
+            }
+        };
+        mainHandler.post(myRunnable);
+
 
         if (items.size() == 1 && this.onFirstLoad) {
             this.onFirstLoad = false;
@@ -846,6 +866,14 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
     @Override
     public void apiFail(String error) {
         globeProcessing = false;
+        Handler mainHandler = new Handler(this.getMainLooper());
+        Runnable myRunnable = new Runnable() {
+            @Override
+            public void run() {
+                globusButton.setImageResource(R.mipmap.globe);
+            }
+        };
+        mainHandler.post(myRunnable);
         Toast.makeText(this, error, Toast.LENGTH_LONG).show();
     }
 
