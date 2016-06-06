@@ -2,6 +2,7 @@ package nebo15.eppyk.managers;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.util.Log;
 
 import java.text.ParseException;
@@ -89,34 +90,44 @@ public class UpdateManager implements Callback {
 
 
     @Override
-    public void onResponse(Call call, Response response) {
+    public void onResponse(Call call, final Response response) {
 
-        if (response.body() instanceof EppykL10Ns) {
-            Log.i("NETWORK", "Done EppykL10Ns");
-            List<L10N> items = ((EppykL10Ns)response.body()).data;
-            if (callback != null)
-                callback.apiL10NsLoaded(items);
-        } else if (response.body() instanceof EppykL10nAnswers) {
-            Log.i("NETWORK", "Done EppykL10nAnswers");
-            UpdateManager.getInstance().setLastUpdateDate(new Date());
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
 
-            DBManager db = new DBManager(context);
-            List answers = ((EppykL10nAnswers)response.body()).data;
-            Meta meta = ((EppykL10nAnswers)response.body()).meta;
+                if (response.body() instanceof EppykL10Ns) {
+                    Log.i("NETWORK", "Done EppykL10Ns");
+                    List<L10N> items = ((EppykL10Ns)response.body()).data;
+                    if (callback != null)
+                        callback.apiL10NsLoaded(items);
+                } else if (response.body() instanceof EppykL10nAnswers) {
+                    Log.i("NETWORK", "Done EppykL10nAnswers");
+                    UpdateManager.getInstance().setLastUpdateDate(new Date());
 
-            if (meta.getAppend() == 1 || (!lastLoadedL10n.equalsIgnoreCase(getCurrentL10N())) )
-                db.deleteAllAnswers();
+                    DBManager db = new DBManager(context);
+                    List answers = ((EppykL10nAnswers)response.body()).data;
+                    Meta meta = ((EppykL10nAnswers)response.body()).meta;
 
-            for (Object _answer : answers) {
-                EppykAnswer answer = (EppykAnswer)_answer;
-                boolean success = db.addAnswer(answer);
+                    if (meta.getAppend() == 1 || (!lastLoadedL10n.equalsIgnoreCase(getCurrentL10N())) )
+                        db.deleteAllAnswers();
+
+                    for (Object _answer : answers) {
+                        EppykAnswer answer = (EppykAnswer)_answer;
+                        boolean success = db.addAnswer(answer);
+                    }
+
+                    setCurrentL10N(lastLoadedL10n);
+
+                    if (callback != null)
+                        callback.apiAnswersLoaded(answers);
+                }
+
+
             }
+        });
 
-            setCurrentL10N(lastLoadedL10n);
 
-            if (callback != null)
-                callback.apiAnswersLoaded(answers);
-        }
     }
 
     @Override

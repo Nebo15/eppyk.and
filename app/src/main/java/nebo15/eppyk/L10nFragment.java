@@ -39,9 +39,6 @@ public class L10nFragment extends Fragment {
 
                 ft.remove(L10nFragment.this);
                 ft.commit();
-
-
-
             }
         });
 

@@ -9,7 +9,7 @@
         android:startOffset="1000"
         android:fillAfter="true"
         android:fromYDelta="0"
-        android:toYDelta="140" />
+        android:toYDelta="130" />
 
 
 </set>
