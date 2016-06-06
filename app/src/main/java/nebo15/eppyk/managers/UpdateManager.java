@@ -105,6 +105,7 @@ public class UpdateManager implements Callback {
                     Log.i("NETWORK", "Done EppykL10nAnswers");
                     UpdateManager.getInstance().setLastUpdateDate(new Date());
 
+                    AnswerManager.isDbBlocked = true;
                     DBManager db = new DBManager(context);
                     List answers = ((EppykL10nAnswers)response.body()).data;
                     Meta meta = ((EppykL10nAnswers)response.body()).meta;
@@ -116,7 +117,7 @@ public class UpdateManager implements Callback {
                         EppykAnswer answer = (EppykAnswer)_answer;
                         boolean success = db.addAnswer(answer);
                     }
-
+                    AnswerManager.isDbBlocked = false;
                     setCurrentL10N(lastLoadedL10n);
 
                     if (callback != null)

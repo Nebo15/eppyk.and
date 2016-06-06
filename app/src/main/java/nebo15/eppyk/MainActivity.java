@@ -125,6 +125,7 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
 
         // DB
         this.db = new DBManager(this);
+        AnswerManager.isDbBlocked = false;
 
         // Fragment
 

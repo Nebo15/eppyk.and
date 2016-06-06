@@ -14,6 +14,7 @@ import nebo15.eppyk.data_api.EppykAnswer;
 public class AnswerManager {
 
     static private DBManager db;
+    static public boolean isDbBlocked;
 
     public enum AnswerSource {
         L10N, DB
@@ -21,14 +22,17 @@ public class AnswerManager {
 
     static public String[] getAnswer(Context context) {
         db = new DBManager(context);
-        if (getSource() == AnswerSource.DB)
+        if (getSource() == AnswerSource.DB) {
+            Log.i("ANSWER", "DB");
             return getDBAnswer();
-        else
+        } else {
+            Log.i("ANSWER", "Local");
             return getL10NAnswer(context);
+        }
     }
 
     static private AnswerSource getSource() {
-        if (db.getAnswersCount() > 0)
+        if (!isDbBlocked && db.getAnswersCount() > 0)
             return AnswerSource.DB;
 
         return AnswerSource.L10N;
