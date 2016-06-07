@@ -32,7 +32,7 @@ public class AnswerManager {
     }
 
     static private AnswerSource getSource() {
-        if (!isDbBlocked && db.getAnswersCount() > 0)
+        if (!isDbBlocked &&  db.getAnswersCount() > 0)
             return AnswerSource.DB;
 
         return AnswerSource.L10N;

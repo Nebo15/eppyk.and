@@ -8,6 +8,8 @@
     <string name="l10n_title">SELECT THE LANGUAGE</string>
     <string name="button_done">DONE</string>
     <string name="l10n_hint">SELECT WISELY BUT REMEMBER THAT YOU\'RE ALWAYS CAN CHANGE YOUR CHOICE PRETTY EASY BY TAPING ON GLOBE IN THE TOP LEFT CORNER :)</string>
+    <string name="shake_hint">IF YOU DON\'T LIKE THE ANSWER SHAKE IT AGAIN</string>
+
 
     <!-- Answers sector -->
     <string name="answers_count">822</string>

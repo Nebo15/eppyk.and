@@ -126,6 +126,7 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
         // DB
         this.db = new DBManager(this);
         AnswerManager.isDbBlocked = false;
+        starInHand = false;
 
         // Fragment
 
@@ -553,6 +554,7 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
             // Man drop the star
             manImageView.setGif(manGifStatic);
             manImageView.play();
+            starInHand = false;
         }
 
         if (manMoves[0] == object || manMoves[1] == object || manMoves[2] == object) {
@@ -562,8 +564,10 @@ public class MainActivity extends AppCompatActivity implements Animation.Animati
 
     }
 
+    private boolean starInHand;
     public void gifAnimationShowFrame(GIFObject object, int frameIndex) {
-        if (object == starsGifDrop && frameIndex == 16) {
+        if (object == starsGifDrop && frameIndex > 14 && !starInHand) {
+            starInHand = true;
             // Man catch the star
             manImageView.setGif(manGifCatch);
             manImageView.play();

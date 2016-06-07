@@ -8,6 +8,7 @@
     <string name="l10n_title">ВЫБРАТЬ ЯЗЫК</string>
     <string name="button_done">ГОТОВО</string>
     <string name="l10n_hint">ВЫБИРАЙ МУДРО, НО ПОМНИ, ЧТО ТЫ ВСЕГДА МОЖЕШЬ ДОСТАТОЧНО ПРОСТО ИЗМЕНИТЬ НАСТРОЙКИ, ПРОСТО ТАПНИ ПО ГЛОБУСУ В ВЕРХНЕМ ЛЕВОМ УГЛУ ;)</string>
+    <string name="shake_hint">ЕСТЬ ТЕБЕ НЕ НРАВИТСЯ ОТВЕТ ПОТРЯСИ ТЕЛЕФОН СНОВА</string>
 
 
     <!-- Answers sector -->
